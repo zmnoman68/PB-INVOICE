@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PATHAN BAZAR - Modern POS & Invoice System</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- QRCode JS Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <style>
+    :root {
+      --pos-bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --brand-indigo: #4f46e5;
+      --brand-indigo-dark: #3730a3;
+      --accent-teal: #0d9488;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+    }
+
+    body { 
+      background-color: var(--pos-bg); 
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; 
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Login Screen Styling */
+    .login-container { 
+      min-height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      background: linear-gradient(135deg, #312e81 0%, #4f46e5 50%, #0d9488 100%);
+    }
+
+    .login-card { 
+      width: 100%; 
+      max-width: 440px; 
+      border-radius: 24px; 
+      border: none; 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+      background: #ffffff;
+    }
+    
+    /* Header Navigation */
+    .app-header { 
+      background: linear-gradient(90deg, #1e1b4b 0%, #312e81 50%, #0f766e 100%); 
+      border-bottom: 3px solid var(--accent-teal);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .company-logo-img { 
+      width: 52px; 
+      height: 52px; 
+      object-fit: contain;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 3px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* POS Cards */
+    .pos-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Total Sale Dashboard Card Widget */
+    .stat-card-widget {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card-widget::after {
+      content: '৳';
+      position: absolute;
+      right: 15px;
+      bottom: -15px;
+      font-size: 5rem;
+      font-weight: 800;
+      opacity: 0.15;
+    }
+
+    .form-control, .form-select {
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      padding: 0.6rem 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background-color: #fafafa;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--brand-indigo);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+      background-color: #ffffff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-indigo), var(--brand-indigo-dark));
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-success-action {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-weight: 800;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .btn-success-action:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+    }
+
+    /* Catalog Quick Add Banner */
+    .product-selector-box {
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+      border: 2px dashed #38bdf8 !important;
+      border-radius: 16px;
+    }
+
+    /* POS Data Tables */
+    .table thead th {
+      background-color: #f8fafc;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--brand-indigo);
+      font-weight: 800;
+      padding: 12px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .totals-box {
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+      border: 2px solid #e9d5ff;
+      border-radius: 16px;
+    }
+
+    .badge-branch {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+      padding: 6px 12px;
+    }
+
+    /* Printable Receipt Styles (A4 Dual-Copy Layout) */
+    .print-copy-container { display: none; }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff !important; font-size: 9.5pt; color: #000; }
+      .container-fluid { padding: 0 !important; margin: 0 !important; width: 100% !important; }
+      
+      .print-copy-container { 
+        display: block !important; 
+        width: 100%;
+        height: 100vh;
+        page-break-after: always;
+        padding: 25px;
+        box-sizing: border-box;
+      }
+      .print-copy-container:last-child { page-break-after: avoid; }
+      
+      .receipt-box {
+        border: 2px solid #1e293b;
+        padding: 25px;
+        border-radius: 6px;
+        height: 96%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+      }
+
+      .branch-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        padding: 4px 10px;
+        border: 1px solid #0f172a;
+        background: #f8fafc;
+        text-transform: uppercase;
+      }
+
+      .reprint-stamp {
+        display: inline-block;
+        border: 2px solid #dc2626;
+        color: #dc2626;
+        font-weight: 800;
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-left: 10px;
+      }
+
+      .qr-container {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .table-print {
+        border: 1px solid #cbd5e1 !important;
+      }
+      .table-print th, .table-print td {
+        border: 1px solid #cbd5e1 !important;
+        padding: 6px 8px !important;
+      }
+
+      .print-logo-img {
+        max-height: 55px;
+        width: auto;
+        object-fit: contain;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= 1. WELCOME & LOGIN PAGE ================= -->
+  <div id="loginSection" class="login-container no-print">
+    <div class="card login-card p-4 p-md-5">
+      <div class="text-center mb-4">
+        <img src="pb.png" alt="Pathan Bazar Logo" class="company-logo-img mx-auto mb-3" style="width:72px; height:72px;" onerror="this.onerror=null; this.src='https://via.placeholder.com/72?text=PB';">
+        <h3 class="fw-extrabold mb-1" style="letter-spacing: -0.5px; color: #1e1b4b;">PATHAN BAZAR</h3>
+        <span class="badge bg-warning text-dark font-monospace mb-2" style="font-size: 0.75rem;">SMART POS & ONLINE TERMINAL</span>
+        <p class="text-muted small">Please sign in with your credentials</p>
+      </div>
+      
+      <form onsubmit="handleLogin(event)">
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Username</label>
+          <input type="text" id="loginUser" class="form-control" placeholder="e.g. pbonline, pbdhaka, pbbogura, pbctg" required>
+        </div>
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Password</label>
+          <input type="password" id="loginPass" class="form-control" placeholder="••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 fw-bold py-3" style="font-size: 1rem;">Launch Console 🚀</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= 2. MAIN INVOICE APPLICATION ================= -->
+  <div id="appSection" class="d-none">
+    
+    <!-- Navigation Header -->
+    <header class="app-header py-3 mb-4 no-print">
+      <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+          <img src="pb.png" alt="Pathan Bazar Logo" class="company-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/52?text=PB';">
+          <div>
+            <div class="d-flex align-items-center gap-2">
+              <h4 class="fw-bold mb-0 text-white" style="letter-spacing: -0.5px;">PATHAN BAZAR</h4>
+              <span class="badge rounded-pill badge-branch text-uppercase" id="currentBranchBadge">Branch Portal</span>
+            </div>
+            <small class="text-white-50" id="currentBranchAddress">Branch Address</small>
+          </div>
+        </div>
+        <button class="btn btn-outline-light btn-sm fw-bold px-3 rounded-pill" onclick="handleLogout()">🔒 Logout</button>
+      </div>
+    </header>
+
+    <div class="container-fluid px-4 no-print">
+      <div class="row g-4">
+        
+        <!-- Left Column: Invoice Generator -->
+        <div class="col-lg-8">
+          <div class="pos-card p-4 mb-4">
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-dark mb-0">📝 Sale Terminal</h5>
+              <div id="editingModeBadge" class="d-none badge bg-warning text-dark fw-bold px-3 py-2 fs-6">
+                ✏️ EDITING INVOICE MODE
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-3">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Salesman Name</label>
+                <input type="text" id="salesman" class="form-control" placeholder="e.g. NOMAN" oninput="handleSalesmanInput()">
+              </div>
+              <div class="col-md-3 d-none" id="onlineSlNumCol">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: #d97706;">SL Number (Online)</label>
+                <input type="text" id="onlineSlNum" class="form-control border-warning fw-bold" placeholder="e.g. SL-1029" oninput="syncPrintData()">
+              </div>
+              <div class="col-md-3" id="invNumCol">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Invoice Number</label>
+                <input type="text" id="invoiceNumber" class="form-control bg-light fw-bold" style="color: var(--brand-indigo);" readonly>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Date</label>
+                <input type="text" id="invoiceDate" class="form-control bg-light" readonly>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-4">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--text-muted);">Customer Name</label>
+                <input type="text" id="clientName" class="form-control" placeholder="Walk-in / Online Client" oninput="syncPrintData()">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--text-muted);">Customer Contact / Phone</label>
+                <input type="text" id="clientPhone" class="form-control" placeholder="017XXXXXXXX" oninput="syncPrintData()">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--text-muted);">Customer Address</label>
+                <input type="text" id="clientAddress" class="form-control" placeholder="House/Road, City" oninput="syncPrintData()">
+              </div>
+            </div>
+
+            <!-- Online Note Input (Dynamic) -->
+            <div class="row g-3 mb-4 d-none" id="onlineNoteRow">
+              <div class="col-12">
+                <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: #0284c7;">Online Order Note / Remarks</label>
+                <input type="text" id="onlineNote" class="form-control border-info" placeholder="e.g. Deliver before 5 PM, Handle with care, Payment via Bkash..." oninput="syncPrintData()">
+              </div>
+            </div>
+
+            <!-- Product Selector -->
+            <div class="product-selector-box p-3 mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label fw-bold small text-uppercase text-primary mb-0">🛒 Quick Catalog Search &amp; Manual Entry</label>
+                <span class="badge bg-primary text-white" style="font-size: 0.65rem;">Central Inventory</span>
+              </div>
+              <div class="row g-2">
+                <div class="col-md-5">
+                  <select id="productCatalog" class="form-select" onchange="selectCatalogItem()">
+                    <option value="">-- Choose Central Product --</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <input type="text" id="itemTitle" class="form-control" placeholder="Or manual name">
+                </div>
+                <div class="col-md-2">
+                  <input type="number" id="itemPrice" class="form-control" placeholder="Price (৳)">
+                </div>
+                <div class="col-md-2">
+                  <button type="button" class="btn btn-primary w-100 fw-bold" onclick="addItem()">+ Add Item</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Line Items Table -->
+            <div class="table-responsive mb-3">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Item Description</th>
+                    <th width="120" class="text-end">Price (৳)</th>
+                    <th width="100" class="text-center">Qty</th>
+                    <th width="130" class="text-end">Total (৳)</th>
+                    <th width="40"></th>
+                  </tr>
+                </thead>
+                <tbody id="itemList"></tbody>
+              </table>
+            </div>
+
+            <!-- Totals -->
+            <div class="row justify-content-end mt-3">
+              <div class="col-md-6">
+                <div class="totals-box p-3">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted fw-semibold">Subtotal:</span>
+                    <span class="fw-bold" id="subtotalDisplay">৳0.00</span>
+                  </div>
+                  
+                  <!-- Shipping Charge Row (Online Only) -->
+                  <div class="d-flex justify-content-between align-items-center mb-2 d-none" id="shippingChargeRow">
+                    <span class="text-muted fw-semibold">Shipping Charge:</span>
+                    <input type="number" id="shippingChargeValue" class="form-control form-control-sm text-end" style="width: 100px;" value="0" min="0" oninput="calculateTotals()">
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center gap-1">
+                      <span class="text-muted fw-semibold">Discount:</span>
+                      <select id="discountType" class="form-select form-select-sm" style="width: auto;" onchange="calculateTotals()">
+                        <option value="flat">৳</option>
+                        <option value="percent">%</option>
+                      </select>
+                    </div>
+                    <input type="number" id="discountValue" class="form-control form-control-sm text-end" style="width: 100px;" value="0" min="0" oninput="calculateTotals()">
+                  </div>
+                  <hr class="my-2" style="border-color: #d8b4fe;">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold fs-5" style="color: #581c87;">Grand Total:</span>
+                    <span class="fw-extrabold fs-3 text-success" id="grandTotalDisplay">৳0.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Checkout Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button id="cancelEditBtn" class="btn btn-secondary btn-lg px-3 py-3 d-none fw-bold" onclick="resetFormToNew()">
+                ✕ Cancel Edit
+              </button>
+              <button class="btn btn-success-action btn-lg px-4 py-3" onclick="printAndLogInvoice()">
+                🖨️ Checkout Sale &amp; Print Money Receipt
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Column: Filtering & Ledger -->
+        <div class="col-lg-4">
+
+          <!-- Dashboard Revenue Widget -->
+          <div class="stat-card-widget mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px; opacity: 0.9;">Total Branch Revenue</span>
+              <span class="badge bg-white text-dark fw-bold rounded-pill" style="font-size: 0.65rem;">LIVE</span>
+            </div>
+            <h2 class="fw-extrabold mb-0" id="totalSaleWidget">৳0.00</h2>
+            <small class="d-block mt-1" style="opacity: 0.85; font-size: 0.75rem;">Cumulative Sales Logged for Active Terminal</small>
+          </div>
+
+          <div class="pos-card p-3 mb-4">
+            <h6 class="fw-bold mb-3 d-flex align-items-center gap-2 text-primary">
+              <span>📈</span> Export Date-wise Excel
+            </h6>
+            <div class="mb-2">
+              <label class="form-label small text-muted fw-bold">From Date</label>
+              <input type="date" id="exportFromDate" class="form-control form-control-sm">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small text-muted fw-bold">To Date</label>
+              <input type="date" id="exportToDate" class="form-control form-control-sm">
+            </div>
+            <button class="btn btn-outline-primary w-100 btn-sm fw-bold mb-2 rounded-pill" onclick="exportToCSV()">Export Filtered CSV</button>
+            <button class="btn btn-link text-secondary w-100 btn-sm text-decoration-none" onclick="exportAllCSV()">Export All Sales History</button>
+          </div>
+
+          <div class="pos-card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0 text-dark">📜 Branch Sales Ledger</h6>
+              <button class="btn btn-outline-danger btn-sm py-0 rounded-pill" style="font-size: 0.7rem;" onclick="clearHistoryWithPassword()">Clear Log</button>
+            </div>
+            <div class="table-responsive" style="max-height: 420px;">
+              <table class="table table-sm table-hover align-middle" id="historyTable">
+                <thead>
+                  <tr>
+                    <th>Invoice / Date</th>
+                    <th class="text-end">Total</th>
+                    <th class="text-center" width="110">Action</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= 3. REPRINT LOG MODAL ================= -->
+    <div class="modal fade no-print" id="reprintLogModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 border-0 shadow">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title fw-bold">📜 Invoice Reprint &amp; Edit History</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div id="modalInvSummary" class="mb-3 p-3 bg-light rounded border"></div>
+            <h6 class="fw-bold mb-3 text-primary">Audit Trail Logs:</h6>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <thead class="table-secondary">
+                  <tr>
+                    <th>#</th>
+                    <th>Date &amp; Time</th>
+                    <th>Salesman / User</th>
+                    <th>New Grand Total</th>
+                    <th>Items Count</th>
+                  </tr>
+                </thead>
+                <tbody id="reprintLogTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 4. A4 DUAL-COPY PRINTABLE RECEIPTS ================= -->
+
+    <!-- Customer Copy -->
+    <div class="print-copy-container">
+      <div class="receipt-box">
+        <span class="branch-badge" id="printBranchBadge1">CUSTOMER COPY</span>
+        <div>
+          <div class="row align-items-center pb-3 border-bottom mb-3">
+            <div class="col-8">
+              <div class="d-flex align-items-center gap-3">
+                <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=PB';">
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <h2 class="fw-bold text-dark mb-0" style="letter-spacing: 1px;">PATHAN BAZAR</h2>
+                    <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
+                  </div>
+                  <p class="mb-0 small text-muted print-branch-address">Branch Address</p>
+                  <p class="mb-0 small text-muted"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <h4 class="fw-bold text-uppercase mb-1">MONEY RECEIPT</h4>
+              <div class="d-flex justify-content-end">
+                <div class="qr-container" id="qrCustomer"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3 small bg-light p-2 rounded border">
+            <div class="col-6">
+              <p class="mb-1"><strong>Customer Name:</strong> <span class="print-client-name">-</span></p>
+              <p class="mb-1"><strong>Contact Number:</strong> <span class="print-client-phone">-</span></p>
+              <p class="mb-0"><strong>Address:</strong> <span class="print-client-address">-</span></p>
+            </div>
+            <div class="col-6 text-end">
+              <p class="mb-1"><strong>Receipt No:</strong> <span class="print-inv-num">-</span></p>
+              <p class="mb-1 print-sl-num-block d-none"><strong>SL Number:</strong> <span class="print-sl-num">-</span></p>
+              <p class="mb-1"><strong>Date:</strong> <span class="print-date">-</span></p>
+              <p class="mb-0"><strong>Salesman:</strong> <span class="print-salesman">-</span></p>
+            </div>
+          </div>
+
+          <!-- Printable Online Note Block -->
+          <div class="p-2 mb-2 rounded bg-light border d-none print-note-block small">
+            <strong>Order Note:</strong> <span class="print-note-text">-</span>
+          </div>
+
+          <table class="table table-bordered align-middle table-print mb-2">
+            <thead>
+              <tr class="table-secondary">
+                <th>Item Description</th>
+                <th width="100" class="text-end">Price (৳)</th>
+                <th width="70" class="text-center">Qty</th>
+                <th width="120" class="text-end">Total (৳)</th>
+              </tr>
+            </thead>
+            <tbody class="print-item-list"></tbody>
+          </table>
+
+          <div class="row justify-content-end mt-2">
+            <div class="col-5">
+              <table class="table table-sm table-borderless mb-0">
+                <tr>
+                  <td>Subtotal:</td>
+                  <td class="text-end fw-bold print-subtotal">৳0.00</td>
+                </tr>
+                <tr class="print-shipping-row d-none">
+                  <td>Shipping Charge:</td>
+                  <td class="text-end fw-bold print-shipping">৳0.00</td>
+                </tr>
+                <tr>
+                  <td>Discount:</td>
+                  <td class="text-end fw-bold print-discount">৳0.00</td>
+                </tr>
+                <tr class="border-top">
+                  <td class="fw-bold">Grand Total:</td>
+                  <td class="text-end fw-bold fs-6 print-grandtotal">৳0.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row text-center mt-4 pt-3">
+          <div class="col-6">
+            <p class="mb-0">___________________________</p>
+            <p class="fw-bold small text-muted">Salesman Signature</p>
+          </div>
+          <div class="col-6">
+            <p class="mb-0">___________________________</p>
+            <p class="fw-bold small text-muted">Authorized Signature</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Office Copy -->
+    <div class="print-copy-container">
+      <div class="receipt-box">
+        <span class="branch-badge" id="printBranchBadge2">OFFICE COPY</span>
+        <div>
+          <div class="row align-items-center pb-3 border-bottom mb-3">
+            <div class="col-8">
+              <div class="d-flex align-items-center gap-3">
+                <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=PB';">
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <h2 class="fw-bold text-dark mb-0" style="letter-spacing: 1px;">PATHAN BAZAR</h2>
+                    <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
+                  </div>
+                  <p class="mb-0 small text-muted print-branch-address">Branch Address</p>
+                  <p class="mb-0 small text-muted"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 text-end">
+              <h4 class="fw-bold text-uppercase mb-1">MONEY RECEIPT</h4>
+              <div class="d-flex justify-content-end">
+                <div class="qr-container" id="qrOffice"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3 small bg-light p-2 rounded border">
+            <div class="col-6">
+              <p class="mb-1"><strong>Customer Name:</strong> <span class="print-client-name">-</span></p>
+              <p class="mb-1"><strong>Contact Number:</strong> <span class="print-client-phone">-</span></p>
+              <p class="mb-0"><strong>Address:</strong> <span class="print-client-address">-</span></p>
+            </div>
+            <div class="col-6 text-end">
+              <p class="mb-1"><strong>Receipt No:</strong> <span class="print-inv-num">-</span></p>
+              <p class="mb-1 print-sl-num-block d-none"><strong>SL Number:</strong> <span class="print-sl-num">-</span></p>
+              <p class="mb-1"><strong>Date:</strong> <span class="print-date">-</span></p>
+              <p class="mb-0"><strong>Salesman:</strong> <span class="print-salesman">-</span></p>
+            </div>
+          </div>
+
+          <!-- Printable Online Note Block -->
+          <div class="p-2 mb-2 rounded bg-light border d-none print-note-block small">
+            <strong>Order Note:</strong> <span class="print-note-text">-</span>
+          </div>
+
+          <table class="table table-bordered align-middle table-print mb-2">
+            <thead>
+              <tr class="table-secondary">
+                <th>Item Description</th>
+                <th width="100" class="text-end">Price (৳)</th>
+                <th width="70" class="text-center">Qty</th>
+                <th width="120" class="text-end">Total (৳)</th>
+              </tr>
+            </thead>
+            <tbody class="print-item-list"></tbody>
+          </table>
+
+          <div class="row justify-content-end mt-2">
+            <div class="col-5">
+              <table class="table table-sm table-borderless mb-0">
+                <tr>
+                  <td>Subtotal:</td>
+                  <td class="text-end fw-bold print-subtotal">৳0.00</td>
+                </tr>
+                <tr class="print-shipping-row d-none">
+                  <td>Shipping Charge:</td>
+                  <td class="text-end fw-bold print-shipping">৳0.00</td>
+                </tr>
+                <tr>
+                  <td>Discount:</td>
+                  <td class="text-end fw-bold print-discount">৳0.00</td>
+                </tr>
+                <tr class="border-top">
+                  <td class="fw-bold">Grand Total:</td>
+                  <td class="text-end fw-bold fs-6 print-grandtotal">৳0.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row text-center mt-4 pt-3">
+          <div class="col-6">
+            <p class="mb-0">___________________________</p>
+            <p class="fw-bold small text-muted">Salesman Signature</p>
+          </div>
+          <div class="col-6">
+            <p class="mb-0">___________________________</p>
+            <p class="fw-bold small text-muted">Authorized Signature</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // CENTRAL CATALOG
+    const PRODUCT_CATALOG = [
+      { name: "Product 1 - Men's Shirt", price: 650 },
+      { name: "Product 2 - Denim Jeans Pant", price: 1200 },
+      { name: "Product 3 - Premium T-Shirt", price: 350 },
+      { name: "Product 4 - Casual Polo Shirt", price: 450 },
+      { name: "Product 5 - Formal Trousers", price: 950 },
+      { name: "Product 6 - Ladies Kurti", price: 850 },
+      { name: "Product 7 - Three Piece Set", price: 2200 },
+      { name: "Product 8 - Saree Collection", price: 3500 },
+      { name: "Product 9 - Panjabi Classic", price: 1500 },
+      { name: "Product 10 - Kids Frock", price: 550 },
+      { name: "Product 11 - Winter Jacket", price: 2800 },
+      { name: "Product 12 - Hooded Sweatshirt", price: 1100 },
+      { name: "Product 13 - Formal Blazer", price: 4200 },
+      { name: "Product 14 - Silk Dupatta", price: 400 },
+      { name: "Product 15 - Cotton Vest", price: 300 }
+    ];
+
+    // REGISTERED BRANCH & USER ACCOUNTS
+    const BRANCH_USERS = {
+      "pbonline": {
+        pass: "4444",
+        name: "Online Order (Dhaka Main Branch)",
+        address: "Dhaka Elephant Road, Shahjalal Islami Bank Building",
+        phone: "01886881164",
+        isOnlineUser: true
+      },
+      "pbdhaka": { 
+        pass: "1111", 
+        name: "Dhaka Branch", 
+        address: "Dhaka Elephant Road, Shahjalal Islami Bank Building", 
+        phone: "01886881164",
+        isOnlineUser: false
+      },
+      "pbbogura": { 
+        pass: "2222", 
+        name: "Bogura Branch", 
+        address: "Jatya Swadhinata Sarani, Bogura Town", 
+        phone: "01886881165",
+        isOnlineUser: false 
+      },
+      "pbctg": { 
+        pass: "3333", 
+        name: "Chittagong Branch", 
+        address: "70, hazi mantion road, Terribazar, Chattogram", 
+        phone: "01333723463",
+        isOnlineUser: false 
+      }
+    };
+
+    let activeBranchObj = null;
+    let currentItems = [];
+    let isEditingMode = false;
+    let editingInvoiceNumber = null;
+
+    // Authentication Logic
+    function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById("loginUser").value.trim().toLowerCase();
+      const p = document.getElementById("loginPass").value.trim();
+
+      if (BRANCH_USERS[u] && BRANCH_USERS[u].pass === p) {
+        activeBranchObj = BRANCH_USERS[u];
+        document.getElementById("loginSection").classList.add("d-none");
+        document.getElementById("appSection").classList.remove("d-none");
+        
+        document.getElementById("currentBranchBadge").textContent = activeBranchObj.name;
+        document.getElementById("currentBranchAddress").textContent = `${activeBranchObj.address} | ${activeBranchObj.phone}`;
+        
+        document.getElementById("printBranchBadge1").textContent = `${activeBranchObj.name.toUpperCase()} - CUSTOMER COPY`;
+        document.getElementById("printBranchBadge2").textContent = `${activeBranchObj.name.toUpperCase()} - OFFICE COPY`;
+        
+        document.querySelectorAll(".print-branch-address").forEach(e => e.textContent = activeBranchObj.address);
+        document.querySelectorAll(".print-branch-contact").forEach(e => e.textContent = activeBranchObj.phone);
+
+        // Toggle Online Specific Elements
+        configureOnlineUserUI();
+
+        initApp();
+      } else {
+        alert("Invalid Username or Password!");
+      }
+    }
+
+    function configureOnlineUserUI() {
+      const isOnline = activeBranchObj && activeBranchObj.isOnlineUser;
+      
+      const slNumCol = document.getElementById("onlineSlNumCol");
+      const noteRow = document.getElementById("onlineNoteRow");
+      const shippingRow = document.getElementById("shippingChargeRow");
+
+      if (isOnline) {
+        slNumCol.classList.remove("d-none");
+        noteRow.classList.remove("d-none");
+        shippingRow.classList.remove("d-none");
+      } else {
+        slNumCol.classList.add("d-none");
+        noteRow.classList.add("d-none");
+        shippingRow.classList.add("d-none");
+      }
+    }
+
+    function handleLogout() {
+      activeBranchObj = null;
+      currentItems = [];
+      resetFormToNew();
+      document.getElementById("appSection").classList.add("d-none");
+      document.getElementById("loginSection").classList.remove("d-none");
+      document.getElementById("loginUser").value = "";
+      document.getElementById("loginPass").value = "";
+    }
+
+    function initApp() {
+      populateCatalog();
+      generateInvoiceNumber();
+      renderHistory();
+    }
+
+    function populateCatalog() {
+      const select = document.getElementById("productCatalog");
+      select.innerHTML = '<option value="">-- Choose Central Product --</option>';
+      PRODUCT_CATALOG.forEach((item, idx) => {
+        let opt = document.createElement("option");
+        opt.value = idx;
+        opt.textContent = `${item.name} - ৳${item.price}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function selectCatalogItem() {
+      const idx = document.getElementById("productCatalog").value;
+      if (idx !== "") {
+        document.getElementById("itemTitle").value = PRODUCT_CATALOG[idx].name;
+        document.getElementById("itemPrice").value = PRODUCT_CATALOG[idx].price;
+      }
+    }
+
+    function handleSalesmanInput() {
+      if (!isEditingMode) {
+        generateInvoiceNumber();
+      } else {
+        syncPrintData();
+      }
+    }
+
+    function generateInvoiceNumber() {
+      if (isEditingMode) return;
+      const now = new Date();
+      const salesman = (document.getElementById("salesman").value || "GENERIC").trim().toUpperCase().replace(/\s+/g, '');
+      
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+
+      const prefix = (activeBranchObj && activeBranchObj.isOnlineUser) ? "ONL" : "INV";
+      const invNum = `${prefix}-${salesman}-${dd}${mm}${yyyy}-${hh}${min}${ss}`;
+      const isoDate = `${yyyy}-${mm}-${dd}`;
+      
+      document.getElementById("invoiceNumber").value = invNum;
+      document.getElementById("invoiceDate").value = `${dd}/${mm}/${yyyy}`;
+      document.getElementById("invoiceDate").dataset.iso = isoDate;
+      
+      syncPrintData();
+    }
+
+    function addItem() {
+      const name = document.getElementById("itemTitle").value.trim();
+      const price = parseFloat(document.getElementById("itemPrice").value);
+
+      if (!name || isNaN(price) || price <= 0) {
+        alert("Please enter a valid item name and price.");
+        return;
+      }
+
+      currentItems.push({ name, price, qty: 1 });
+      document.getElementById("itemTitle").value = "";
+      document.getElementById("itemPrice").value = "";
+      document.getElementById("productCatalog").value = "";
+
+      renderItems();
+    }
+
+    function removeItem(index) {
+      currentItems.splice(index, 1);
+      renderItems();
+    }
+
+    function updateQty(index, newQty) {
+      const qty = parseInt(newQty);
+      if (qty > 0) {
+        currentItems[index].qty = qty;
+        renderItems();
+      }
+    }
+
+    function renderItems() {
+      const tbody = document.getElementById("itemList");
+      tbody.innerHTML = "";
+
+      currentItems.forEach((item, idx) => {
+        const lineTotal = item.price * item.qty;
+        tbody.innerHTML += `
+          <tr>
+            <td class="fw-semibold">${item.name}</td>
+            <td class="text-end">৳${item.price.toFixed(2)}</td>
+            <td>
+              <input type="number" class="form-control form-control-sm text-center" value="${item.qty}" min="1" onchange="updateQty(${idx}, this.value)">
+            </td>
+            <td class="text-end fw-bold text-primary">৳${lineTotal.toFixed(2)}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-link text-danger p-0 text-decoration-none" onclick="removeItem(${idx})">✕</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      calculateTotals();
+    }
+
+    function calculateTotals() {
+      const subtotal = currentItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const discType = document.getElementById("discountType").value;
+      const discVal = parseFloat(document.getElementById("discountValue").value) || 0;
+      const isOnline = activeBranchObj && activeBranchObj.isOnlineUser;
+      const shippingVal = isOnline ? (parseFloat(document.getElementById("shippingChargeValue").value) || 0) : 0;
+
+      let discountAmount = discType === "percent" ? (subtotal * discVal) / 100 : discVal;
+      const grandTotal = Math.max(0, subtotal + shippingVal - discountAmount);
+
+      document.getElementById("subtotalDisplay").textContent = `৳${subtotal.toFixed(2)}`;
+      document.getElementById("grandTotalDisplay").textContent = `৳${grandTotal.toFixed(2)}`;
+
+      syncPrintData();
+    }
+
+    function syncPrintData() {
+      const invNum = document.getElementById("invoiceNumber").value;
+      const date = document.getElementById("invoiceDate").value;
+      const salesman = document.getElementById("salesman").value.trim() || "N/A";
+      const client = document.getElementById("clientName").value.trim() || "Walk-in Customer";
+      const phone = document.getElementById("clientPhone").value.trim() || "N/A";
+      const address = document.getElementById("clientAddress").value.trim() || "N/A";
+
+      const isOnline = activeBranchObj && activeBranchObj.isOnlineUser;
+      const slNum = isOnline ? (document.getElementById("onlineSlNum").value.trim() || "-") : "";
+      const note = isOnline ? (document.getElementById("onlineNote").value.trim() || "") : "";
+      const shippingVal = isOnline ? (parseFloat(document.getElementById("shippingChargeValue").value) || 0) : 0;
+
+      const subtotal = currentItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const discType = document.getElementById("discountType").value;
+      const discVal = parseFloat(document.getElementById("discountValue").value) || 0;
+      let discountAmount = discType === "percent" ? (subtotal * discVal) / 100 : discVal;
+      const grandTotal = Math.max(0, subtotal + shippingVal - discountAmount);
+
+      document.querySelectorAll(".print-client-name").forEach(e => e.textContent = client);
+      document.querySelectorAll(".print-client-phone").forEach(e => e.textContent = phone);
+      document.querySelectorAll(".print-client-address").forEach(e => e.textContent = address);
+      document.querySelectorAll(".print-inv-num").forEach(e => e.textContent = invNum);
+      document.querySelectorAll(".print-date").forEach(e => e.textContent = date);
+      document.querySelectorAll(".print-salesman").forEach(e => e.textContent = salesman);
+
+      document.querySelectorAll(".print-subtotal").forEach(e => e.textContent = `৳${subtotal.toFixed(2)}`);
+      document.querySelectorAll(".print-discount").forEach(e => e.textContent = `৳${discountAmount.toFixed(2)}`);
+      document.querySelectorAll(".print-grandtotal").forEach(e => e.textContent = `৳${grandTotal.toFixed(2)}`);
+
+      // Online Dynamic Print Updates
+      document.querySelectorAll(".print-sl-num-block").forEach(e => {
+        if (isOnline) {
+          e.classList.remove("d-none");
+          e.querySelector(".print-sl-num").textContent = slNum;
+        } else {
+          e.classList.add("d-none");
+        }
+      });
+
+      document.querySelectorAll(".print-note-block").forEach(e => {
+        if (isOnline && note !== "") {
+          e.classList.remove("d-none");
+          e.querySelector(".print-note-text").textContent = note;
+        } else {
+          e.classList.add("d-none");
+        }
+      });
+
+      document.querySelectorAll(".print-shipping-row").forEach(e => {
+        if (isOnline && shippingVal > 0) {
+          e.classList.remove("d-none");
+          e.querySelector(".print-shipping").textContent = `৳${shippingVal.toFixed(2)}`;
+        } else {
+          e.classList.add("d-none");
+        }
+      });
+
+      document.querySelectorAll(".print-item-list").forEach(tbody => {
+        tbody.innerHTML = "";
+        currentItems.forEach(item => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${item.name}</td>
+              <td class="text-end">৳${item.price.toFixed(2)}</td>
+              <td class="text-center">${item.qty}</td>
+              <td class="text-end fw-bold">৳${(item.price * item.qty).toFixed(2)}</td>
+            </tr>
+          `;
+        });
+      });
+
+      // Show/Hide Reprint Stamps on Print View
+      document.querySelectorAll(".reprint-tag-display").forEach(e => {
+        if (isEditingMode) {
+          e.classList.remove("d-none");
+        } else {
+          e.classList.add("d-none");
+        }
+      });
+
+      // Regenerate QR Codes for Invoice
+      generateQRCodes(invNum);
+    }
+
+    function generateQRCodes(invNum) {
+      document.getElementById("qrCustomer").innerHTML = "";
+      document.getElementById("qrOffice").innerHTML = "";
+      
+      if (invNum) {
+        new QRCode(document.getElementById("qrCustomer"), {
+          text: invNum,
+          width: 70,
+          height: 70
+        });
+        new QRCode(document.getElementById("qrOffice"), {
+          text: invNum,
+          width: 70,
+          height: 70
+        });
+      }
+    }
+
+    // PRINT & LOG SALE
+    function printAndLogInvoice() {
+      if (currentItems.length === 0) {
+        alert("Please add at least one item before printing!");
+        return;
+      }
+
+      const invNum = document.getElementById("invoiceNumber").value;
+      const date = document.getElementById("invoiceDate").value;
+      const isoDate = document.getElementById("invoiceDate").dataset.iso;
+      const salesman = document.getElementById("salesman").value.trim() || "N/A";
+      const client = document.getElementById("clientName").value.trim() || "Walk-in Customer";
+      const phone = document.getElementById("clientPhone").value.trim() || "N/A";
+      const address = document.getElementById("clientAddress").value.trim() || "N/A";
+
+      const isOnline = activeBranchObj && activeBranchObj.isOnlineUser;
+      const slNum = isOnline ? (document.getElementById("onlineSlNum").value.trim() || "") : "";
+      const note = isOnline ? (document.getElementById("onlineNote").value.trim() || "") : "";
+      const shippingVal = isOnline ? (parseFloat(document.getElementById("shippingChargeValue").value) || 0) : 0;
+
+      const subtotal = currentItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const discType = document.getElementById("discountType").value;
+      const discVal = parseFloat(document.getElementById("discountValue").value) || 0;
+      let discountAmount = discType === "percent" ? (subtotal * discVal) / 100 : discVal;
+      const grandTotal = Math.max(0, subtotal + shippingVal - discountAmount);
+
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      let history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      const timestamp = new Date().toLocaleString();
+
+      if (isEditingMode) {
+        // Find existing record and push to its reprintHistory log
+        const existingIdx = history.findIndex(item => item.invNum === invNum);
+        if (existingIdx !== -1) {
+          let existingRecord = history[existingIdx];
+          if (!existingRecord.reprintHistory) {
+            existingRecord.reprintHistory = [];
+          }
+
+          // Append reprint audit entry
+          existingRecord.reprintHistory.push({
+            timestamp: timestamp,
+            salesman: salesman,
+            grandTotal: grandTotal.toFixed(2),
+            itemCount: currentItems.length
+          });
+
+          // Update main details
+          existingRecord.client = client;
+          existingRecord.phone = phone;
+          existingRecord.address = address;
+          existingRecord.salesman = salesman;
+          existingRecord.items = [...currentItems];
+          existingRecord.discType = discType;
+          existingRecord.discVal = discVal;
+          existingRecord.shippingCharge = shippingVal;
+          existingRecord.slNum = slNum;
+          existingRecord.note = note;
+          existingRecord.grandTotal = grandTotal.toFixed(2);
+          existingRecord.isReprinted = true;
+
+          history[existingIdx] = existingRecord;
+        }
+      } else {
+        // New Invoice Creation
+        const newRecord = {
+          invNum,
+          date,
+          isoDate,
+          salesman,
+          client,
+          phone,
+          address,
+          slNum,
+          note,
+          shippingCharge: shippingVal,
+          items: [...currentItems],
+          discType,
+          discVal,
+          grandTotal: grandTotal.toFixed(2),
+          branch: activeBranchObj.name,
+          isReprinted: false,
+          reprintHistory: []
+        };
+        history.unshift(newRecord);
+      }
+
+      localStorage.setItem(historyKey, JSON.stringify(history));
+      renderHistory();
+
+      // Trigger Print
+      window.print();
+
+      // Reset Form State back to new invoice mode after printing
+      resetFormToNew();
+    }
+
+    function renderHistory() {
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      const tbody = document.querySelector("#historyTable tbody");
+      tbody.innerHTML = "";
+
+      let totalRevenue = 0;
+
+      history.forEach((item) => {
+        totalRevenue += parseFloat(item.grandTotal) || 0;
+        const reprintCount = item.reprintHistory ? item.reprintHistory.length : 0;
+        const reprintedBadge = item.isReprinted 
+          ? `<span class="badge bg-danger ms-1" style="font-size: 0.55rem;">REPRINTED (${reprintCount})</span>` 
+          : '';
+        const slDisplay = item.slNum ? `<span class="badge bg-warning text-dark ms-1" style="font-size:0.55rem;">${item.slNum}</span>` : '';
+
+        tbody.innerHTML += `
+          <tr>
+            <td>
+              <div class="fw-bold text-dark" style="font-size: 0.8rem;">${item.invNum} ${slDisplay} ${reprintedBadge}</div>
+              <div class="text-muted" style="font-size: 0.7rem;">${item.date} | ${item.client}</div>
+            </td>
+            <td class="text-end">
+              <span class="fw-bold text-success" style="font-size: 0.8rem;">৳${item.grandTotal}</span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-primary btn-sm py-0 px-2 rounded-start-pill" style="font-size: 0.65rem;" onclick="requestEditInvoice('${item.invNum}')" title="Edit & Reprint">
+                  ✏️ Edit
+                </button>
+                <button class="btn btn-outline-secondary btn-sm py-0 px-2 rounded-end-pill" style="font-size: 0.65rem;" onclick="viewReprintLog('${item.invNum}')" title="View Reprint History">
+                  📜 Log
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("totalSaleWidget").textContent = `৳${totalRevenue.toFixed(2)}`;
+    }
+
+    // VIEW REPRINT HISTORY LOG MODAL
+    function viewReprintLog(invNum) {
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      const target = history.find(item => item.invNum === invNum);
+
+      if (!target) return;
+
+      document.getElementById("modalInvSummary").innerHTML = `
+        <div class="d-flex justify-content-between">
+          <div><strong>Invoice No:</strong> ${target.invNum} ${target.slNum ? `(${target.slNum})` : ''}</div>
+          <div><strong>Current Total:</strong> ৳${target.grandTotal}</div>
+        </div>
+        <div class="small text-muted mt-1">Customer: ${target.client} (${target.phone}) | Original Date: ${target.date}</div>
+        ${target.note ? `<div class="small text-primary mt-1">Note: ${target.note}</div>` : ''}
+      `;
+
+      const tbody = document.getElementById("reprintLogTableBody");
+      tbody.innerHTML = "";
+
+      if (!target.reprintHistory || target.reprintHistory.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No reprints recorded for this invoice yet.</td></tr>`;
+      } else {
+        target.reprintHistory.forEach((log, index) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${log.timestamp}</td>
+              <td>${log.salesman}</td>
+              <td class="fw-bold text-success">৳${log.grandTotal}</td>
+              <td>${log.itemCount} Items</td>
+            </tr>
+          `;
+        });
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById('reprintLogModal'));
+      modal.show();
+    }
+
+    // USER RE-EDIT & RE-PRINT VERIFICATION
+    function requestEditInvoice(invNum) {
+      const password = prompt("Enter Password to Edit & Reprint this Memo:");
+      if (password === activeBranchObj.pass) {
+        loadInvoiceForEdit(invNum);
+      } else if (password !== null) {
+        alert("Incorrect Password! Access denied.");
+      }
+    }
+
+    function loadInvoiceForEdit(invNum) {
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      const target = history.find(item => item.invNum === invNum);
+
+      if (!target) {
+        alert("Invoice record not found.");
+        return;
+      }
+
+      isEditingMode = true;
+      editingInvoiceNumber = invNum;
+
+      document.getElementById("editingModeBadge").classList.remove("d-none");
+      document.getElementById("cancelEditBtn").classList.remove("d-none");
+
+      // Load form fields
+      document.getElementById("invoiceNumber").value = target.invNum;
+      document.getElementById("invoiceDate").value = target.date;
+      document.getElementById("invoiceDate").dataset.iso = target.isoDate;
+      document.getElementById("salesman").value = target.salesman;
+      document.getElementById("clientName").value = target.client || "";
+      document.getElementById("clientPhone").value = target.phone || "";
+      document.getElementById("clientAddress").value = target.address || "";
+      document.getElementById("discountType").value = target.discType || "flat";
+      document.getElementById("discountValue").value = target.discVal || 0;
+
+      if (activeBranchObj && activeBranchObj.isOnlineUser) {
+        document.getElementById("onlineSlNum").value = target.slNum || "";
+        document.getElementById("onlineNote").value = target.note || "";
+        document.getElementById("shippingChargeValue").value = target.shippingCharge || 0;
+      }
+
+      currentItems = target.items ? [...target.items] : [];
+      renderItems();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetFormToNew() {
+      isEditingMode = false;
+      editingInvoiceNumber = null;
+
+      document.getElementById("editingModeBadge").classList.add("d-none");
+      document.getElementById("cancelEditBtn").classList.add("d-none");
+
+      document.getElementById("clientName").value = "";
+      document.getElementById("clientPhone").value = "";
+      document.getElementById("clientAddress").value = "";
+      document.getElementById("discountValue").value = 0;
+      
+      if (document.getElementById("onlineSlNum")) document.getElementById("onlineSlNum").value = "";
+      if (document.getElementById("onlineNote")) document.getElementById("onlineNote").value = "";
+      if (document.getElementById("shippingChargeValue")) document.getElementById("shippingChargeValue").value = 0;
+
+      currentItems = [];
+
+      generateInvoiceNumber();
+      renderItems();
+    }
+
+    function clearHistoryWithPassword() {
+      const password = prompt("Enter Master Security PIN to clear history:");
+      if (password === "0000") {
+        if (confirm("Are you sure you want to clear this history log?")) {
+          const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+          localStorage.removeItem(historyKey);
+          renderHistory();
+        }
+      } else if (password !== null) {
+        alert("Incorrect Security PIN!");
+      }
+    }
+
+    function exportToCSV() {
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      const fromDate = document.getElementById("exportFromDate").value;
+      const toDate = document.getElementById("exportToDate").value;
+
+      if (!fromDate || !toDate) {
+        alert("Please select both 'From Date' and 'To Date'.");
+        return;
+      }
+
+      const filtered = history.filter(item => item.isoDate >= fromDate && item.isoDate <= toDate);
+
+      if (filtered.length === 0) {
+        alert("No records found in this date range.");
+        return;
+      }
+
+      generateCSV(filtered, `${activeBranchObj.name.replace(/\s+/g, '_')}_Sales_${fromDate}_to_${toDate}.csv`);
+    }
+
+    function exportAllCSV() {
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      if (history.length === 0) {
+        alert("No sales history available to export.");
+        return;
+      }
+      generateCSV(history, `${activeBranchObj.name.replace(/\s+/g, '_')}_All_Sales_History.csv`);
+    }
+
+    function generateCSV(data, filename) {
+      let csv = "Invoice Number,SL Number,Date,Branch,Salesman,Customer,Phone,Address,Note,Shipping Charge (Tk),Grand Total (Tk),Status,Reprint Count\n";
+      data.forEach(r => {
+        const status = r.isReprinted ? "REPRINTED/EDITED" : "ORIGINAL";
+        const count = r.reprintHistory ? r.reprintHistory.length : 0;
+        csv += `"${r.invNum}","${r.slNum || ''}","${r.date}","${r.branch}","${r.salesman}","${r.client}","${r.phone}","${r.address || ''}","${r.note || ''}","${r.shippingCharge || 0}","${r.grandTotal}","${status}","${count}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
