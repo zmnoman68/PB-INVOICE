@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PATHAN BAZAR - Modern POS & Invoice System</title>
+  <title>PATHAN BAZAR - Modern Invoice System</title>
   
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -171,7 +171,7 @@
 
     @media print {
       .no-print { display: none !important; }
-      body { background-color: #ffffff !important; font-size: 9.5pt; color: #000; }
+      body { background-color: #ffffff !important; font-size: 9pt; color: #000; }
       .container-fluid { padding: 0 !important; margin: 0 !important; width: 100% !important; }
       
       .print-copy-container { 
@@ -179,51 +179,53 @@
         width: 100%;
         height: 100vh;
         page-break-after: always;
-        padding: 25px;
+        padding: 15px 20px;
         box-sizing: border-box;
       }
       .print-copy-container:last-child { page-break-after: avoid; }
       
       .receipt-box {
-        border: 2px solid #1e293b;
-        padding: 25px;
-        border-radius: 6px;
-        height: 96%;
+        border: 1.5px solid #0f172a;
+        padding: 16px;
+        border-radius: 8px;
+        height: 98%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         position: relative;
       }
 
-      .branch-badge {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 0.75rem;
+      /* Integrated Clean Copy Pill Badge */
+      .badge-copy-pill {
+        display: inline-block;
+        font-size: 0.65rem;
         font-weight: 800;
         letter-spacing: 0.5px;
         padding: 4px 10px;
-        border: 1px solid #0f172a;
-        background: #f8fafc;
+        border: 1px solid #1e293b;
+        background-color: #f8fafc;
+        color: #0f172a;
+        border-radius: 20px;
         text-transform: uppercase;
+        line-height: 1.2;
       }
 
       .reprint-stamp {
         display: inline-block;
-        border: 2px solid #dc2626;
+        border: 1.5px solid #dc2626;
         color: #dc2626;
         font-weight: 800;
-        font-size: 0.75rem;
-        padding: 2px 8px;
+        font-size: 0.65rem;
+        padding: 2px 6px;
         border-radius: 4px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-left: 10px;
+        letter-spacing: 0.5px;
+        margin-left: 6px;
       }
 
       .qr-container {
-        width: 80px;
-        height: 80px;
+        width: 65px;
+        height: 65px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -234,11 +236,11 @@
       }
       .table-print th, .table-print td {
         border: 1px solid #cbd5e1 !important;
-        padding: 6px 8px !important;
+        padding: 5px 8px !important;
       }
 
       .print-logo-img {
-        max-height: 55px;
+        max-height: 48px;
         width: auto;
         object-fit: contain;
       }
@@ -253,21 +255,55 @@
       <div class="text-center mb-4">
         <img src="pb.png" alt="Pathan Bazar Logo" class="company-logo-img mx-auto mb-3" style="width:72px; height:72px;" onerror="this.onerror=null; this.src='https://via.placeholder.com/72?text=PB';">
         <h3 class="fw-extrabold mb-1" style="letter-spacing: -0.5px; color: #1e1b4b;">PATHAN BAZAR</h3>
-        <span class="badge bg-warning text-dark font-monospace mb-2" style="font-size: 0.75rem;">SMART POS & ONLINE TERMINAL</span>
-        <p class="text-muted small">Please sign in with your credentials</p>
+        <span class="badge bg-warning text-dark font-monospace mb-2" style="font-size: 0.75rem;">SMART INVOICE TERMINAL</span>
+        <p class="text-muted small mb-1">Please sign in with your credentials</p>
+        
+        <!-- HELP BUTTON -->
+        <div>
+          <button type="button" class="btn btn-outline-info btn-sm rounded-pill mt-2 px-3 fw-bold" data-bs-toggle="modal" data-bs-target="#helpModal" style="font-size: 0.75rem;">
+             Need Help / Contact
+          </button>
+        </div>
       </div>
       
       <form onsubmit="handleLogin(event)">
         <div class="mb-3">
           <label class="form-label small fw-bold text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Username</label>
-          <input type="text" id="loginUser" class="form-control" placeholder="e.g. pbonline, pbdhaka, pbbogura, pbctg" required>
+          <input type="text" id="loginUser" class="form-control" placeholder="username" required>
         </div>
         <div class="mb-4">
           <label class="form-label small fw-bold text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Password</label>
-          <input type="password" id="loginPass" class="form-control" placeholder="••••" required>
+          <input type="password" id="loginPass" class="form-control" placeholder="" required>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold py-3" style="font-size: 1rem;">Launch Console 🚀</button>
+        <button type="submit" class="btn btn-primary w-100 fw-bold py-3" style="font-size: 1rem;">Log In</button>
       </form>
+    </div>
+  </div>
+
+  <!-- HELP & SUPPORT MODAL -->
+  <div class="modal fade no-print" id="helpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content rounded-4 border-0 shadow">
+        <div class="modal-header bg-primary text-white p-3">
+          <h6 class="modal-title fw-bold text-white mb-0">💬 Technical Support &amp; Help</h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 text-center">
+          <p class="small text-muted mb-3">
+            If you face any issue regarding login credentials, username, or password, please feel free to reach out directly:
+          </p>
+          <div class="p-3 bg-light rounded border mb-3">
+            <h6 class="fw-bold mb-1 text-dark">Abdullah Al Noman</h6>
+            <span class="badge bg-success mb-2">Support Representative</span>
+            <p class="mb-0 fw-bold text-primary" style="font-size: 0.95rem;">
+              📞 <a href="tel:+8801997103368" class="text-decoration-none">+8801997103368</a>
+            </p>
+          </div>
+          <a href="https://wa.me/8801997103368" target="_blank" class="btn btn-success w-100 fw-bold rounded-pill">
+            💬 WhatsApp Support
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -308,11 +344,11 @@
             <div class="row g-3 mb-3">
               <div class="col-md-3">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Salesman Name</label>
-                <input type="text" id="salesman" class="form-control" placeholder="e.g. NOMAN" oninput="handleSalesmanInput()">
+                <input type="text" id="salesman" class="form-control" oninput="handleSalesmanInput()">
               </div>
               <div class="col-md-3 d-none" id="onlineSlNumCol">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: #d97706;">SL Number (Online)</label>
-                <input type="text" id="onlineSlNum" class="form-control border-warning fw-bold" placeholder="e.g. SL-1029" oninput="syncPrintData()">
+                <input type="text" id="onlineSlNum" class="form-control border-warning fw-bold" placeholder="e.g. SL" oninput="syncPrintData()">
               </div>
               <div class="col-md-3" id="invNumCol">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Invoice Number</label>
@@ -331,7 +367,7 @@
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--text-muted);">Customer Contact / Phone</label>
-                <input type="text" id="clientPhone" class="form-control" placeholder="017XXXXXXXX" oninput="syncPrintData()">
+                <input type="text" id="clientPhone" class="form-control" placeholder="01XXXXXXXXX" oninput="syncPrintData()">
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--text-muted);">Customer Address</label>
@@ -343,7 +379,7 @@
             <div class="row g-3 mb-4 d-none" id="onlineNoteRow">
               <div class="col-12">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: #0284c7;">Online Order Note / Remarks</label>
-                <input type="text" id="onlineNote" class="form-control border-info" placeholder="e.g. Deliver before 5 PM, Handle with care, Payment via Bkash..." oninput="syncPrintData()">
+                <input type="text" id="onlineNote" class="form-control border-info" placeholder="" oninput="syncPrintData()">
               </div>
             </div>
 
@@ -406,8 +442,8 @@
                     <div class="d-flex align-items-center gap-1">
                       <span class="text-muted fw-semibold">Discount:</span>
                       <select id="discountType" class="form-select form-select-sm" style="width: auto;" onchange="calculateTotals()">
-                        <option value="flat">৳</option>
-                        <option value="percent">%</option>
+                        <option value="flat">IN TAKA ৳</option>
+                        <option value="percent">IN PERCENTAGE %</option>
                       </select>
                     </div>
                     <input type="number" id="discountValue" class="form-control form-control-sm text-end" style="width: 100px;" value="0" min="0" oninput="calculateTotals()">
@@ -466,7 +502,7 @@
           <div class="pos-card p-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h6 class="fw-bold mb-0 text-dark">📜 Branch Sales Ledger</h6>
-              <button class="btn btn-outline-danger btn-sm py-0 rounded-pill" style="font-size: 0.7rem;" onclick="clearHistoryWithPassword()">Clear Log</button>
+              <button class="btn btn-outline-danger btn-sm py-0 rounded-pill" style="font-size: 0.7rem;" onclick="openClearLogModal()">Clear Log</button>
             </div>
             <div class="table-responsive" style="max-height: 420px;">
               <table class="table table-sm table-hover align-middle" id="historyTable">
@@ -486,7 +522,45 @@
       </div>
     </div>
 
-    <!-- ================= 3. REPRINT LOG MODAL ================= -->
+    <!-- ================= 3. SECURE AUTH & REPRINT MODALS ================= -->
+
+    <!-- Edit/Reprint Verification Modal -->
+    <div class="modal fade no-print" id="editAuthModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content rounded-4 border-0 shadow">
+          <div class="modal-header bg-indigo text-white p-3" style="background: var(--brand-indigo);">
+            <h6 class="modal-title fw-bold text-white mb-0">🔒 Authorize Edit &amp; Reprint</h6>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-3">
+            <p class="small text-muted mb-2">Enter branch password to unlock invoice for editing:</p>
+            <input type="password" id="editModalPassword" class="form-control mb-3" placeholder="XXXX" autocomplete="off">
+            <div id="editAuthError" class="text-danger small mb-2 d-none fw-bold">❌ Incorrect Password!</div>
+            <button type="button" class="btn btn-primary w-100 fw-bold" onclick="verifyEditPassword()">Verify &amp; Edit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clear Log Verification Modal -->
+    <div class="modal fade no-print" id="clearLogAuthModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content rounded-4 border-0 shadow">
+          <div class="modal-header bg-danger text-white p-3">
+            <h6 class="modal-title fw-bold text-white mb-0">⚠️ Clear Sales History</h6>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-3">
+            <p class="small text-muted mb-2">Enter MASTER PIN to clear log:</p>
+            <input type="password" id="clearLogModalPassword" class="form-control mb-3" placeholder="XXXX" autocomplete="off">
+            <div id="clearLogAuthError" class="text-danger small mb-2 d-none fw-bold">❌ Invalid Security PIN!</div>
+            <button type="button" class="btn btn-danger w-100 fw-bold" onclick="verifyClearLogPassword()">Confirm &amp; Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reprint Log Modal -->
     <div class="modal fade no-print" id="reprintLogModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -521,37 +595,41 @@
     <!-- Customer Copy -->
     <div class="print-copy-container">
       <div class="receipt-box">
-        <span class="branch-badge" id="printBranchBadge1">CUSTOMER COPY</span>
         <div>
-          <div class="row align-items-center pb-3 border-bottom mb-3">
-            <div class="col-8">
-              <div class="d-flex align-items-center gap-3">
-                <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=PB';">
-                <div>
-                  <div class="d-flex align-items-center gap-2">
-                    <h2 class="fw-bold text-dark mb-0" style="letter-spacing: 1px;">PATHAN BAZAR</h2>
-                    <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
+          <!-- Header Top Row (Logo, Company, Copy Badge, Title, QR) -->
+          <div class="d-flex justify-content-between align-items-start border-bottom pb-2 mb-3">
+            <div class="d-flex align-items-center gap-3">
+              <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=PB';">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <div class="d-flex flex-column">
+                    <div class="fw-extrabold text-dark fs-3 lh-1" style="letter-spacing: 0.5px;">PATHAN</div>
+                    <div class="fw-extrabold text-dark fs-4 lh-1" style="letter-spacing: 0.5px;">BAZAR</div>
                   </div>
-                  <p class="mb-0 small text-muted print-branch-address">Branch Address</p>
-                  <p class="mb-0 small text-muted"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
+                  <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
                 </div>
+                <p class="mb-0 small text-muted print-branch-address" style="font-size: 0.72rem;">Branch Address</p>
+                <p class="mb-0 small text-muted" style="font-size: 0.72rem;"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
               </div>
             </div>
-            <div class="col-4 text-end">
-              <h4 class="fw-bold text-uppercase mb-1">MONEY RECEIPT</h4>
+
+            <div class="text-end">
+              <span class="badge-copy-pill mb-1" id="printBranchBadge1">ONLINE ORDER (DHAKA MAIN BRANCH) - CUSTOMER COPY</span>
+              <h5 class="fw-bold text-uppercase mb-1 mt-1" style="letter-spacing: 0.5px;">MONEY RECEIPT</h5>
               <div class="d-flex justify-content-end">
                 <div class="qr-container" id="qrCustomer"></div>
               </div>
             </div>
           </div>
 
-          <div class="row mb-3 small bg-light p-2 rounded border">
-            <div class="col-6">
+          <!-- Customer & Invoice Info Box -->
+          <div class="row mb-3 small bg-light p-2 rounded border mx-0">
+            <div class="col-6 ps-1">
               <p class="mb-1"><strong>Customer Name:</strong> <span class="print-client-name">-</span></p>
               <p class="mb-1"><strong>Contact Number:</strong> <span class="print-client-phone">-</span></p>
               <p class="mb-0"><strong>Address:</strong> <span class="print-client-address">-</span></p>
             </div>
-            <div class="col-6 text-end">
+            <div class="col-6 text-end pe-1">
               <p class="mb-1"><strong>Receipt No:</strong> <span class="print-inv-num">-</span></p>
               <p class="mb-1 print-sl-num-block d-none"><strong>SL Number:</strong> <span class="print-sl-num">-</span></p>
               <p class="mb-1"><strong>Date:</strong> <span class="print-date">-</span></p>
@@ -600,14 +678,14 @@
           </div>
         </div>
 
-        <div class="row text-center mt-4 pt-3">
+        <div class="row text-center mt-3 pt-2">
           <div class="col-6">
             <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Salesman Signature</p>
+            <p class="fw-bold small text-muted">Customer Signature</p>
           </div>
           <div class="col-6">
             <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Authorized Signature</p>
+            <p class="fw-bold small text-muted">Authorized Signatory</p>
           </div>
         </div>
       </div>
@@ -616,37 +694,41 @@
     <!-- Office Copy -->
     <div class="print-copy-container">
       <div class="receipt-box">
-        <span class="branch-badge" id="printBranchBadge2">OFFICE COPY</span>
         <div>
-          <div class="row align-items-center pb-3 border-bottom mb-3">
-            <div class="col-8">
-              <div class="d-flex align-items-center gap-3">
-                <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/60?text=PB';">
-                <div>
-                  <div class="d-flex align-items-center gap-2">
-                    <h2 class="fw-bold text-dark mb-0" style="letter-spacing: 1px;">PATHAN BAZAR</h2>
-                    <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
+          <!-- Header Top Row (Logo, Company, Copy Badge, Title, QR) -->
+          <div class="d-flex justify-content-between align-items-start border-bottom pb-2 mb-3">
+            <div class="d-flex align-items-center gap-3">
+              <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=PB';">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <div class="d-flex flex-column">
+                    <div class="fw-extrabold text-dark fs-3 lh-1" style="letter-spacing: 0.5px;">PATHAN</div>
+                    <div class="fw-extrabold text-dark fs-4 lh-1" style="letter-spacing: 0.5px;">BAZAR</div>
                   </div>
-                  <p class="mb-0 small text-muted print-branch-address">Branch Address</p>
-                  <p class="mb-0 small text-muted"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
+                  <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
                 </div>
+                <p class="mb-0 small text-muted print-branch-address" style="font-size: 0.72rem;">Branch Address</p>
+                <p class="mb-0 small text-muted" style="font-size: 0.72rem;"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
               </div>
             </div>
-            <div class="col-4 text-end">
-              <h4 class="fw-bold text-uppercase mb-1">MONEY RECEIPT</h4>
+
+            <div class="text-end">
+              <span class="badge-copy-pill mb-1" id="printBranchBadge2">ONLINE ORDER (DHAKA MAIN BRANCH) - OFFICE COPY</span>
+              <h5 class="fw-bold text-uppercase mb-1 mt-1" style="letter-spacing: 0.5px;">MONEY RECEIPT</h5>
               <div class="d-flex justify-content-end">
                 <div class="qr-container" id="qrOffice"></div>
               </div>
             </div>
           </div>
 
-          <div class="row mb-3 small bg-light p-2 rounded border">
-            <div class="col-6">
+          <!-- Customer & Invoice Info Box -->
+          <div class="row mb-3 small bg-light p-2 rounded border mx-0">
+            <div class="col-6 ps-1">
               <p class="mb-1"><strong>Customer Name:</strong> <span class="print-client-name">-</span></p>
               <p class="mb-1"><strong>Contact Number:</strong> <span class="print-client-phone">-</span></p>
               <p class="mb-0"><strong>Address:</strong> <span class="print-client-address">-</span></p>
             </div>
-            <div class="col-6 text-end">
+            <div class="col-6 text-end pe-1">
               <p class="mb-1"><strong>Receipt No:</strong> <span class="print-inv-num">-</span></p>
               <p class="mb-1 print-sl-num-block d-none"><strong>SL Number:</strong> <span class="print-sl-num">-</span></p>
               <p class="mb-1"><strong>Date:</strong> <span class="print-date">-</span></p>
@@ -695,14 +777,14 @@
           </div>
         </div>
 
-        <div class="row text-center mt-4 pt-3">
+        <div class="row text-center mt-3 pt-2">
           <div class="col-6">
             <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Salesman Signature</p>
+            <p class="fw-bold small text-muted">Cutomer Signature</p>
           </div>
           <div class="col-6">
             <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Authorized Signature</p>
+            <p class="fw-bold small text-muted">Authorized Signatory</p>
           </div>
         </div>
       </div>
@@ -736,7 +818,7 @@
     // REGISTERED BRANCH & USER ACCOUNTS
     const BRANCH_USERS = {
       "pbonline": {
-        pass: "4444",
+        pass: "ON112233",
         name: "Online Order (Dhaka Main Branch)",
         address: "Dhaka Elephant Road, Shahjalal Islami Bank Building",
         phone: "01886881164",
@@ -769,6 +851,7 @@
     let currentItems = [];
     let isEditingMode = false;
     let editingInvoiceNumber = null;
+    let targetPendingEditInvNum = null;
 
     // Authentication Logic
     function handleLogin(e) {
@@ -1045,13 +1128,13 @@
       if (invNum) {
         new QRCode(document.getElementById("qrCustomer"), {
           text: invNum,
-          width: 70,
-          height: 70
+          width: 65,
+          height: 65
         });
         new QRCode(document.getElementById("qrOffice"), {
           text: invNum,
-          width: 70,
-          height: 70
+          width: 65,
+          height: 65
         });
       }
     }
@@ -1235,13 +1318,24 @@
       modal.show();
     }
 
-    // USER RE-EDIT & RE-PRINT VERIFICATION
+    // SECURE EDIT & REPRINT INVOICE MODAL LOGIC
     function requestEditInvoice(invNum) {
-      const password = prompt("Enter Password to Edit & Reprint this Memo:");
-      if (password === activeBranchObj.pass) {
-        loadInvoiceForEdit(invNum);
-      } else if (password !== null) {
-        alert("Incorrect Password! Access denied.");
+      targetPendingEditInvNum = invNum;
+      document.getElementById("editModalPassword").value = "";
+      document.getElementById("editAuthError").classList.add("d-none");
+      const modal = new bootstrap.Modal(document.getElementById('editAuthModal'));
+      modal.show();
+    }
+
+    function verifyEditPassword() {
+      const pass = document.getElementById("editModalPassword").value;
+      if (pass === activeBranchObj.pass) {
+        const modalEl = document.getElementById('editAuthModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+        loadInvoiceForEdit(targetPendingEditInvNum);
+      } else {
+        document.getElementById("editAuthError").classList.remove("d-none");
       }
     }
 
@@ -1305,16 +1399,26 @@
       renderItems();
     }
 
-    function clearHistoryWithPassword() {
-      const password = prompt("Enter Master Security PIN to clear history:");
-      if (password === "0000") {
-        if (confirm("Are you sure you want to clear this history log?")) {
-          const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
-          localStorage.removeItem(historyKey);
-          renderHistory();
-        }
-      } else if (password !== null) {
-        alert("Incorrect Security PIN!");
+    // SECURE CLEAR HISTORY MODAL LOGIC
+    function openClearLogModal() {
+      document.getElementById("clearLogModalPassword").value = "";
+      document.getElementById("clearLogAuthError").classList.add("d-none");
+      const modal = new bootstrap.Modal(document.getElementById('clearLogAuthModal'));
+      modal.show();
+    }
+
+    function verifyClearLogPassword() {
+      const pin = document.getElementById("clearLogModalPassword").value;
+      if (pin === "0000") {
+        const modalEl = document.getElementById('clearLogAuthModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+
+        const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+        localStorage.removeItem(historyKey);
+        renderHistory();
+      } else {
+        document.getElementById("clearLogAuthError").classList.remove("d-none");
       }
     }
 
