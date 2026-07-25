@@ -57,6 +57,11 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
+    .superadmin-header {
+      background: linear-gradient(90deg, #0f172a 0%, #1e1b4b 50%, #4338ca 100%);
+      border-bottom: 3px solid #6366f1;
+    }
+
     .company-logo-img { 
       width: 52px; 
       height: 52px; 
@@ -302,6 +307,111 @@
           <a href="https://wa.me/8801997103368" target="_blank" class="btn btn-success w-100 fw-bold rounded-pill">
             💬 WhatsApp Support
           </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SUPERADMIN DASHBOARD ================= -->
+  <div id="superAdminSection" class="d-none no-print">
+    <header class="app-header superadmin-header py-3 mb-4">
+      <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+          <img src="pb.png" alt="Pathan Bazar Logo" class="company-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/52?text=PB';">
+          <div>
+            <div class="d-flex align-items-center gap-2">
+              <h4 class="fw-bold mb-0 text-white" style="letter-spacing: -0.5px;">PATHAN BAZAR</h4>
+              <span class="badge rounded-pill bg-danger text-uppercase">SUPERADMIN CONTROL PANEL</span>
+            </div>
+            <small class="text-white-50">Centralized Enterprise Management Portal</small>
+          </div>
+        </div>
+        <button class="btn btn-outline-light btn-sm fw-bold px-3 rounded-pill" onclick="handleLogout()">🔒 Logout</button>
+      </div>
+    </header>
+
+    <div class="container-fluid px-4">
+      <!-- Quick Actions Header Cards -->
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="pos-card p-4 text-white" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <h6 class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.75rem;">Total Enterprise Sales</h6>
+            <h2 class="fw-extrabold mb-0" id="superTotalSales">৳0.00</h2>
+            <small class="text-white-50">Combined live sales across all branches</small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="pos-card p-4 text-white" style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);">
+            <h6 class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.75rem;">Active Branch Outlets</h6>
+            <h2 class="fw-extrabold mb-0">4 Outlets</h2>
+            <small class="text-white-50">Online, Dhaka, Bogura, Chittagong</small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="pos-card p-4 h-100 d-flex flex-column justify-content-center bg-white border">
+            <h6 class="fw-bold text-dark mb-2">📊 Live Google Sheet Sync</h6>
+            <a href="https://docs.google.com/spreadsheets/d/1Tnu7YgBwcyMhkyH4L9ukyzqL7cE3p_4rApjsv3syltw/edit?usp=sharing" target="_blank" id="googleSheetBtn" class="btn btn-success fw-bold py-2 rounded-pill d-flex align-items-center justify-content-center gap-2">
+              🟢 Open Central Google Sheet ↗
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Admin Panel Content -->
+      <div class="row g-4 mb-4">
+        <!-- Branch Passwords & Security Box -->
+        <div class="col-lg-5">
+          <div class="pos-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                <span>🔐</span> Branch Credentials
+              </h5>
+              <button class="btn btn-outline-primary btn-sm fw-bold rounded-pill" id="toggleCredentialsBtn" onclick="toggleCredentialsVisibility()">
+                👁️ View Credentials
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover border align-middle mb-0" style="font-size:0.85rem;">
+                <thead class="table-light">
+                  <tr>
+                    <th>Branch</th>
+                    <th>User</th>
+                    <th>Password</th>
+                    <th>Contact</th>
+                  </tr>
+                </thead>
+                <tbody id="branchPasswordTable">
+                  <!-- Populated dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Combined Sales History Table -->
+        <div class="col-lg-7">
+          <div class="pos-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold mb-0 text-dark">📜 Central Sales Log (All Branches)</h5>
+              <button class="btn btn-outline-primary btn-sm fw-bold rounded-pill" onclick="exportSuperAdminCSV()">📥 Export All Data (CSV)</button>
+            </div>
+            <div class="table-responsive" style="max-height: 480px;">
+              <table class="table table-sm table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Branch</th>
+                    <th>Inv Number</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th class="text-end">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="superAdminHistoryTable">
+                  <!-- Populated dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -780,7 +890,7 @@
         <div class="row text-center mt-3 pt-2">
           <div class="col-6">
             <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Cutomer Signature</p>
+            <p class="fw-bold small text-muted">Customer Signature</p>
           </div>
           <div class="col-6">
             <p class="mb-0">___________________________</p>
@@ -796,6 +906,9 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    // 100% FREE & UNLIMITED GOOGLE APPS SCRIPT WEB APP URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtJf1mBpXBgkda498WbRJoUCcDoV0RudCSdRGdQrSBOcKN_AiLFuTEKiMv88zJdr0/exec";
+
     // CENTRAL CATALOG
     const PRODUCT_CATALOG = [
       { name: "Product 1 - Men's Shirt", price: 650 },
@@ -815,20 +928,23 @@
       { name: "Product 15 - Cotton Vest", price: 300 }
     ];
 
-    // REGISTERED BRANCH & USER ACCOUNTS
+    // SUPERADMIN CREDENTIALS
+    const SUPER_ADMIN = { user: "admin", pass: "admin123" };
+
+    // REGISTERED BRANCH & USER ACCOUNTS (Updated Dhaka Address & Phones)
     const BRANCH_USERS = {
       "pbonline": {
         pass: "ON112233",
         name: "Online Order (Dhaka Main Branch)",
-        address: "Dhaka Elephant Road, Shahjalal Islami Bank Building",
-        phone: "01886881164",
+        address: "Fahim Mansion, Shahjalal Bank Building, 23 Elephant Road, Newmarket 1205, Dhaka",
+        phone: "01886881164, 01842434135",
         isOnlineUser: true
       },
       "pbdhaka": { 
         pass: "1111", 
         name: "Dhaka Branch", 
-        address: "Dhaka Elephant Road, Shahjalal Islami Bank Building", 
-        phone: "01886881164",
+        address: "Fahim Mansion, Shahjalal Bank Building, 23 Elephant Road, Newmarket 1205, Dhaka", 
+        phone: "01886881164, 01842434135",
         isOnlineUser: false
       },
       "pbbogura": { 
@@ -848,10 +964,12 @@
     };
 
     let activeBranchObj = null;
+    let isSuperAdmin = false;
     let currentItems = [];
     let isEditingMode = false;
     let editingInvoiceNumber = null;
     let targetPendingEditInvNum = null;
+    let credentialsVisible = false;
 
     // Authentication Logic
     function handleLogin(e) {
@@ -859,9 +977,21 @@
       const u = document.getElementById("loginUser").value.trim().toLowerCase();
       const p = document.getElementById("loginPass").value.trim();
 
+      // SuperAdmin Check
+      if (u === SUPER_ADMIN.user && p === SUPER_ADMIN.pass) {
+        isSuperAdmin = true;
+        document.getElementById("loginSection").classList.add("d-none");
+        document.getElementById("appSection").classList.add("d-none");
+        document.getElementById("superAdminSection").classList.remove("d-none");
+        initSuperAdminDashboard();
+        return;
+      }
+
       if (BRANCH_USERS[u] && BRANCH_USERS[u].pass === p) {
         activeBranchObj = BRANCH_USERS[u];
+        isSuperAdmin = false;
         document.getElementById("loginSection").classList.add("d-none");
+        document.getElementById("superAdminSection").classList.add("d-none");
         document.getElementById("appSection").classList.remove("d-none");
         
         document.getElementById("currentBranchBadge").textContent = activeBranchObj.name;
@@ -880,6 +1010,96 @@
       } else {
         alert("Invalid Username or Password!");
       }
+    }
+
+    // SUPERADMIN DASHBOARD LOGIC
+    function initSuperAdminDashboard() {
+      credentialsVisible = false;
+      renderBranchPasswordsTable();
+      renderSuperAdminSalesLog();
+    }
+
+    function toggleCredentialsVisibility() {
+      credentialsVisible = !credentialsVisible;
+      const btn = document.getElementById("toggleCredentialsBtn");
+      if (credentialsVisible) {
+        btn.innerHTML = "🔒 Hide Credentials";
+        btn.classList.replace("btn-outline-primary", "btn-outline-danger");
+      } else {
+        btn.innerHTML = "👁️ View Credentials";
+        btn.classList.replace("btn-outline-danger", "btn-outline-primary");
+      }
+      renderBranchPasswordsTable();
+    }
+
+    function renderBranchPasswordsTable() {
+      const tbodyPass = document.getElementById("branchPasswordTable");
+      tbodyPass.innerHTML = "";
+      Object.keys(BRANCH_USERS).forEach(u => {
+        const b = BRANCH_USERS[u];
+        const displayPass = credentialsVisible ? b.pass : "••••••••";
+        tbodyPass.innerHTML += `
+          <tr>
+            <td class="fw-bold text-primary">${b.name}</td>
+            <td><code class="bg-light px-2 py-1 border rounded text-dark fw-bold">${u}</code></td>
+            <td><span class="badge ${credentialsVisible ? 'bg-success' : 'bg-secondary'}">${displayPass}</span></td>
+            <td><small>${b.phone}</small></td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderSuperAdminSalesLog() {
+      let grandEnterpriseTotal = 0;
+      let allSales = [];
+      const tbodyHist = document.getElementById("superAdminHistoryTable");
+      tbodyHist.innerHTML = "";
+
+      Object.keys(BRANCH_USERS).forEach(u => {
+        const bName = BRANCH_USERS[u].name;
+        const historyKey = `pb_history_${bName.replace(/\s+/g, '').toLowerCase()}`;
+        const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+        
+        history.forEach(item => {
+          grandEnterpriseTotal += parseFloat(item.grandTotal) || 0;
+          allSales.push({ ...item, branchName: bName });
+        });
+      });
+
+      document.getElementById("superTotalSales").textContent = `৳${grandEnterpriseTotal.toFixed(2)}`;
+
+      if (allSales.length === 0) {
+        tbodyHist.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">No sales registered across branches yet.</td></tr>`;
+      } else {
+        allSales.forEach(s => {
+          tbodyHist.innerHTML += `
+            <tr>
+              <td><span class="badge bg-secondary">${s.branchName}</span></td>
+              <td class="fw-bold">${s.invNum}</td>
+              <td class="small text-muted">${s.date}</td>
+              <td>${s.client || 'Walk-in'}</td>
+              <td class="text-end fw-bold text-success">৳${s.grandTotal}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    function exportSuperAdminCSV() {
+      let allSales = [];
+      Object.keys(BRANCH_USERS).forEach(u => {
+        const bName = BRANCH_USERS[u].name;
+        const historyKey = `pb_history_${bName.replace(/\s+/g, '').toLowerCase()}`;
+        const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+        allSales = allSales.concat(history);
+      });
+
+      if (allSales.length === 0) {
+        alert("No combined sales available to export.");
+        return;
+      }
+
+      generateCSV(allSales, `PATHAN_BAZAR_ENTERPRISE_SALES.csv`);
     }
 
     function configureOnlineUserUI() {
@@ -902,9 +1122,11 @@
 
     function handleLogout() {
       activeBranchObj = null;
+      isSuperAdmin = false;
       currentItems = [];
       resetFormToNew();
       document.getElementById("appSection").classList.add("d-none");
+      document.getElementById("superAdminSection").classList.add("d-none");
       document.getElementById("loginSection").classList.remove("d-none");
       document.getElementById("loginUser").value = "";
       document.getElementById("loginPass").value = "";
@@ -1139,7 +1361,7 @@
       }
     }
 
-    // PRINT & LOG SALE
+    // PRINT & LOG SALE (LOCAL + FREE GOOGLE APPS SCRIPT)
     function printAndLogInvoice() {
       if (currentItems.length === 0) {
         alert("Please add at least one item before printing!");
@@ -1165,12 +1387,42 @@
       let discountAmount = discType === "percent" ? (subtotal * discVal) / 100 : discVal;
       const grandTotal = Math.max(0, subtotal + shippingVal - discountAmount);
 
+      const itemsSummary = currentItems.map(i => `${i.name} (x${i.qty})`).join(", ");
+
+      // 1. SAVE DIRECTLY TO GOOGLE SHEET VIA FREE APPS SCRIPT
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          InvoiceNumber: invNum,
+          SLNumber: slNum,
+          Date: date,
+          Branch: activeBranchObj.name,
+          Salesman: salesman,
+          CustomerName: client,
+          Phone: phone,
+          Address: address,
+          Items: itemsSummary,
+          Subtotal: subtotal.toFixed(2),
+          ShippingCharge: shippingVal,
+          Discount: discountAmount.toFixed(2),
+          GrandTotal: grandTotal.toFixed(2),
+          Note: note,
+          Status: isEditingMode ? "REPRINTED/EDITED" : "ORIGINAL"
+        })
+      })
+      .then(() => console.log("Logged online directly to Google Sheet successfully!"))
+      .catch(err => console.error("Error logging online:", err));
+
+      // 2. LOCAL STORAGE LOGIC
       const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
       let history = JSON.parse(localStorage.getItem(historyKey) || "[]");
       const timestamp = new Date().toLocaleString();
 
       if (isEditingMode) {
-        // Find existing record and push to its reprintHistory log
         const existingIdx = history.findIndex(item => item.invNum === invNum);
         if (existingIdx !== -1) {
           let existingRecord = history[existingIdx];
@@ -1178,7 +1430,6 @@
             existingRecord.reprintHistory = [];
           }
 
-          // Append reprint audit entry
           existingRecord.reprintHistory.push({
             timestamp: timestamp,
             salesman: salesman,
@@ -1186,7 +1437,6 @@
             itemCount: currentItems.length
           });
 
-          // Update main details
           existingRecord.client = client;
           existingRecord.phone = phone;
           existingRecord.address = address;
@@ -1203,7 +1453,6 @@
           history[existingIdx] = existingRecord;
         }
       } else {
-        // New Invoice Creation
         const newRecord = {
           invNum,
           date,
@@ -1229,10 +1478,7 @@
       localStorage.setItem(historyKey, JSON.stringify(history));
       renderHistory();
 
-      // Trigger Print
       window.print();
-
-      // Reset Form State back to new invoice mode after printing
       resetFormToNew();
     }
 
@@ -1278,7 +1524,6 @@
       document.getElementById("totalSaleWidget").textContent = `৳${totalRevenue.toFixed(2)}`;
     }
 
-    // VIEW REPRINT HISTORY LOG MODAL
     function viewReprintLog(invNum) {
       const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
       const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
@@ -1318,7 +1563,6 @@
       modal.show();
     }
 
-    // SECURE EDIT & REPRINT INVOICE MODAL LOGIC
     function requestEditInvoice(invNum) {
       targetPendingEditInvNum = invNum;
       document.getElementById("editModalPassword").value = "";
@@ -1355,7 +1599,6 @@
       document.getElementById("editingModeBadge").classList.remove("d-none");
       document.getElementById("cancelEditBtn").classList.remove("d-none");
 
-      // Load form fields
       document.getElementById("invoiceNumber").value = target.invNum;
       document.getElementById("invoiceDate").value = target.date;
       document.getElementById("invoiceDate").dataset.iso = target.isoDate;
@@ -1399,7 +1642,6 @@
       renderItems();
     }
 
-    // SECURE CLEAR HISTORY MODAL LOGIC
     function openClearLogModal() {
       document.getElementById("clearLogModalPassword").value = "";
       document.getElementById("clearLogAuthError").classList.add("d-none");
