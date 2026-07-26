@@ -361,7 +361,7 @@
       <div class="row g-4 mb-4">
         <!-- Branch Passwords & Security Box -->
         <div class="col-lg-5">
-          <div class="pos-card p-4">
+          <div class="pos-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
                 <span>🔐</span> Branch Credentials
@@ -385,6 +385,15 @@
                 </tbody>
               </table>
             </div>
+          </div>
+
+          <!-- SuperAdmin Danger Zone Actions -->
+          <div class="pos-card p-4 border-danger bg-light">
+            <h6 class="fw-bold text-danger mb-2">⚠️ Danger Zone Actions</h6>
+            <p class="small text-muted mb-3">Clear all enterprise sales logs permanently from local storage across all active branch systems.</p>
+            <button class="btn btn-danger w-100 fw-bold rounded-pill py-2" onclick="openSuperAdminClearModal()">
+              🗑️ Clear All Enterprise History
+            </button>
           </div>
         </div>
 
@@ -665,6 +674,24 @@
             <input type="password" id="clearLogModalPassword" class="form-control mb-3" placeholder="XXXX" autocomplete="off">
             <div id="clearLogAuthError" class="text-danger small mb-2 d-none fw-bold">❌ Invalid Security PIN!</div>
             <button type="button" class="btn btn-danger w-100 fw-bold" onclick="verifyClearLogPassword()">Confirm &amp; Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SuperAdmin Clear All History Verification Modal -->
+    <div class="modal fade no-print" id="superAdminClearAuthModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content rounded-4 border-0 shadow">
+          <div class="modal-header bg-danger text-white p-3">
+            <h6 class="modal-title fw-bold text-white mb-0">⚠️ Clear All Enterprise History</h6>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-3">
+            <p class="small text-muted mb-2">Enter Master PIN to clear <strong>all branches</strong> history:</p>
+            <input type="password" id="superAdminClearPin" class="form-control mb-3" placeholder="XXXX" autocomplete="off">
+            <div id="superAdminClearError" class="text-danger small mb-2 d-none fw-bold">❌ Invalid Master PIN!</div>
+            <button type="button" class="btn btn-danger w-100 fw-bold" onclick="verifySuperAdminClearHistory()">Confirm Wipe</button>
           </div>
         </div>
       </div>
@@ -1085,6 +1112,34 @@
       }
     }
 
+    function openSuperAdminClearModal() {
+      document.getElementById("superAdminClearPin").value = "";
+      document.getElementById("superAdminClearError").classList.add("d-none");
+      const modal = new bootstrap.Modal(document.getElementById('superAdminClearAuthModal'));
+      modal.show();
+    }
+
+    function verifySuperAdminClearHistory() {
+      const pin = document.getElementById("superAdminClearPin").value;
+      if (pin === "0000") {
+        const modalEl = document.getElementById('superAdminClearAuthModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+
+        // Clear all branch history keys
+        Object.keys(BRANCH_USERS).forEach(u => {
+          const bName = BRANCH_USERS[u].name;
+          const historyKey = `pb_history_${bName.replace(/\s+/g, '').toLowerCase()}`;
+          localStorage.removeItem(historyKey);
+        });
+
+        renderSuperAdminSalesLog();
+        alert("All enterprise history logs have been successfully cleared.");
+      } else {
+        document.getElementById("superAdminClearError").classList.remove("d-none");
+      }
+    }
+
     function exportSuperAdminCSV() {
       let allSales = [];
       Object.keys(BRANCH_USERS).forEach(u => {
@@ -1316,18 +1371,23 @@
         }
       });
 
+      // Properly populating ALL print item containers across receipt copies
       document.querySelectorAll(".print-item-list").forEach(tbody => {
         tbody.innerHTML = "";
-        currentItems.forEach(item => {
-          tbody.innerHTML += `
-            <tr>
-              <td>${item.name}</td>
-              <td class="text-end">৳${item.price.toFixed(2)}</td>
-              <td class="text-center">${item.qty}</td>
-              <td class="text-end fw-bold">৳${(item.price * item.qty).toFixed(2)}</td>
-            </tr>
-          `;
-        });
+        if (currentItems.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No items added</td></tr>`;
+        } else {
+          currentItems.forEach(item => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${item.name}</td>
+                <td class="text-end">৳${item.price.toFixed(2)}</td>
+                <td class="text-center">${item.qty}</td>
+                <td class="text-end fw-bold">৳${(item.price * item.qty).toFixed(2)}</td>
+              </tr>
+            `;
+          });
+        }
       });
 
       // Show/Hide Reprint Stamps on Print View
