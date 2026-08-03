@@ -9,8 +9,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- QRCode JS Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   
   <style>
     :root {
@@ -171,29 +169,39 @@
       padding: 6px 12px;
     }
 
-    /* Printable Receipt Styles (A4 Dual-Copy Layout) */
+    /* Printable Receipt Styles (3x4 Inch Strict Sizing - Single Customer Copy) */
     .print-copy-container { display: none; }
 
     @media print {
+      @page {
+        size: 3in 4in;
+        margin: 0.05in;
+      }
+
       .no-print { display: none !important; }
-      body { background-color: #ffffff !important; font-size: 9pt; color: #000; }
+      body { 
+        background-color: #ffffff !important; 
+        font-size: 6.5pt !important; 
+        color: #000; 
+        line-height: 1.15;
+      }
       .container-fluid { padding: 0 !important; margin: 0 !important; width: 100% !important; }
       
       .print-copy-container { 
         display: block !important; 
-        width: 100%;
-        height: 100vh;
-        page-break-after: always;
-        padding: 15px 20px;
+        width: 2.9in !important;
+        height: 3.9in !important;
+        page-break-after: avoid;
+        padding: 2px !important;
         box-sizing: border-box;
+        margin: 0 auto;
       }
-      .print-copy-container:last-child { page-break-after: avoid; }
       
       .receipt-box {
-        border: 1.5px solid #0f172a;
-        padding: 16px;
-        border-radius: 8px;
-        height: 98%;
+        border: 1px solid #0f172a;
+        padding: 4px !important;
+        border-radius: 4px;
+        height: 100% !important;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -203,37 +211,29 @@
       /* Integrated Clean Copy Pill Badge */
       .badge-copy-pill {
         display: inline-block;
-        font-size: 0.65rem;
+        font-size: 0.48rem !important;
         font-weight: 800;
-        letter-spacing: 0.5px;
-        padding: 4px 10px;
+        letter-spacing: 0.3px;
+        padding: 2px 4px !important;
         border: 1px solid #1e293b;
         background-color: #f8fafc;
         color: #0f172a;
         border-radius: 20px;
         text-transform: uppercase;
-        line-height: 1.2;
+        line-height: 1.1;
       }
 
       .reprint-stamp {
         display: inline-block;
-        border: 1.5px solid #dc2626;
+        border: 1px solid #dc2626;
         color: #dc2626;
         font-weight: 800;
-        font-size: 0.65rem;
-        padding: 2px 6px;
-        border-radius: 4px;
+        font-size: 0.5rem;
+        padding: 1px 3px;
+        border-radius: 3px;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-left: 6px;
-      }
-
-      .qr-container {
-        width: 65px;
-        height: 65px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        letter-spacing: 0.3px;
+        margin-left: 3px;
       }
 
       .table-print {
@@ -241,11 +241,12 @@
       }
       .table-print th, .table-print td {
         border: 1px solid #cbd5e1 !important;
-        padding: 5px 8px !important;
+        padding: 1.5px 3px !important;
+        font-size: 6pt !important;
       }
 
       .print-logo-img {
-        max-height: 48px;
+        max-height: 24px !important;
         width: auto;
         object-fit: contain;
       }
@@ -263,7 +264,6 @@
         <span class="badge bg-warning text-dark font-monospace mb-2" style="font-size: 0.75rem;">SMART INVOICE TERMINAL</span>
         <p class="text-muted small mb-1">Please sign in with your credentials</p>
         
-        <!-- HELP BUTTON -->
         <div>
           <button type="button" class="btn btn-outline-info btn-sm rounded-pill mt-2 px-3 fw-bold" data-bs-toggle="modal" data-bs-target="#helpModal" style="font-size: 0.75rem;">
              Need Help / Contact
@@ -331,7 +331,6 @@
     </header>
 
     <div class="container-fluid px-4">
-      <!-- Quick Actions Header Cards -->
       <div class="row g-4 mb-4">
         <div class="col-md-4">
           <div class="pos-card p-4 text-white" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
@@ -343,8 +342,8 @@
         <div class="col-md-4">
           <div class="pos-card p-4 text-white" style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);">
             <h6 class="text-uppercase fw-bold text-white-50 mb-1" style="font-size: 0.75rem;">Active Branch Outlets</h6>
-            <h2 class="fw-extrabold mb-0">4 Outlets</h2>
-            <small class="text-white-50">Online, Dhaka, Bogura, Chittagong</small>
+            <h2 class="fw-extrabold mb-0">5 Outlets</h2>
+            <small class="text-white-50">Online, Dhaka, Bogura, Chittagong, Uttara</small>
           </div>
         </div>
         <div class="col-md-4">
@@ -357,9 +356,7 @@
         </div>
       </div>
 
-      <!-- Main Admin Panel Content -->
       <div class="row g-4 mb-4">
-        <!-- Branch Passwords & Security Box -->
         <div class="col-lg-5">
           <div class="pos-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -380,14 +377,11 @@
                     <th>Contact</th>
                   </tr>
                 </thead>
-                <tbody id="branchPasswordTable">
-                  <!-- Populated dynamically via JS -->
-                </tbody>
+                <tbody id="branchPasswordTable"></tbody>
               </table>
             </div>
           </div>
 
-          <!-- SuperAdmin Danger Zone Actions -->
           <div class="pos-card p-4 border-danger bg-light">
             <h6 class="fw-bold text-danger mb-2">⚠️ Danger Zone Actions</h6>
             <p class="small text-muted mb-3">Clear all enterprise sales logs permanently from local storage across all active branch systems.</p>
@@ -397,7 +391,6 @@
           </div>
         </div>
 
-        <!-- Global Combined Sales History Table -->
         <div class="col-lg-7">
           <div class="pos-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -415,9 +408,7 @@
                     <th class="text-end">Amount</th>
                   </tr>
                 </thead>
-                <tbody id="superAdminHistoryTable">
-                  <!-- Populated dynamically via JS -->
-                </tbody>
+                <tbody id="superAdminHistoryTable"></tbody>
               </table>
             </div>
           </div>
@@ -429,7 +420,6 @@
   <!-- ================= 2. MAIN INVOICE APPLICATION ================= -->
   <div id="appSection" class="d-none">
     
-    <!-- Navigation Header -->
     <header class="app-header py-3 mb-4 no-print">
       <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-3">
@@ -469,13 +459,14 @@
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: #d97706;">SL Number (Online)</label>
                 <input type="text" id="onlineSlNum" class="form-control border-warning fw-bold" placeholder="e.g. SL" oninput="syncPrintData()">
               </div>
-              <div class="col-md-3" id="invNumCol">
+              <!-- Fixed Invoice Number Layout to prevent clipping/cutting -->
+              <div class="col-md-4" id="invNumCol">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Invoice Number</label>
-                <input type="text" id="invoiceNumber" class="form-control bg-light fw-bold" style="color: var(--brand-indigo);" readonly>
+                <input type="text" id="invoiceNumber" class="form-control bg-light fw-bold text-truncate" style="color: var(--brand-indigo); font-size: 0.85rem;" readonly title="Invoice Number">
               </div>
-              <div class="col-md-3">
+              <div class="col-md-2" id="invDateCol">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: var(--brand-indigo);">Date</label>
-                <input type="text" id="invoiceDate" class="form-control bg-light" readonly>
+                <input type="text" id="invoiceDate" class="form-control bg-light px-1 text-center" style="font-size: 0.8rem;" readonly>
               </div>
             </div>
 
@@ -494,7 +485,6 @@
               </div>
             </div>
 
-            <!-- Online Note Input (Dynamic) -->
             <div class="row g-3 mb-4 d-none" id="onlineNoteRow">
               <div class="col-12">
                 <label class="form-label fw-bold small text-uppercase" style="font-size: 0.7rem; color: #0284c7;">Online Order Note / Remarks</label>
@@ -551,7 +541,6 @@
                     <span class="fw-bold" id="subtotalDisplay">৳0.00</span>
                   </div>
                   
-                  <!-- Shipping Charge Row (Online Only) -->
                   <div class="d-flex justify-content-between align-items-center mb-2 d-none" id="shippingChargeRow">
                     <span class="text-muted fw-semibold">Shipping Charge:</span>
                     <input type="number" id="shippingChargeValue" class="form-control form-control-sm text-end" style="width: 100px;" value="0" min="0" oninput="calculateTotals()">
@@ -589,10 +578,9 @@
           </div>
         </div>
 
-        <!-- Right Column: Filtering & Ledger -->
+        <!-- Right Column: Filtering, Search & Ledger -->
         <div class="col-lg-4">
 
-          <!-- Dashboard Revenue Widget -->
           <div class="stat-card-widget mb-4">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <span class="text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px; opacity: 0.9;">Total Branch Revenue</span>
@@ -600,6 +588,21 @@
             </div>
             <h2 class="fw-extrabold mb-0" id="totalSaleWidget">৳0.00</h2>
             <small class="d-block mt-1" style="opacity: 0.85; font-size: 0.75rem;">Cumulative Sales Logged for Active Terminal</small>
+          </div>
+
+          <!-- Customer Purchase History Search Box -->
+          <div class="pos-card p-3 mb-4 border-info">
+            <h6 class="fw-bold mb-2 d-flex align-items-center gap-2 text-info">
+              <span>🔍</span> Customer History Search
+            </h6>
+            <p class="small text-muted mb-2" style="font-size: 0.75rem;">Search by Phone Number or Invoice Number to view past purchases &amp; reprint/edit:</p>
+            <div class="input-group input-group-sm mb-2">
+              <input type="text" id="customerSearchInput" class="form-control" placeholder="Enter phone or invoice #..." oninput="handleCustomerSearch()">
+              <button class="btn btn-outline-info" type="button" onclick="handleCustomerSearch()">Search</button>
+            </div>
+            <div id="customerSearchResultContainer" style="max-height: 220px; overflow-y: auto;" class="d-none border rounded p-2 bg-light">
+              <!-- Search results dynamically loaded here -->
+            </div>
           </div>
 
           <div class="pos-card p-3 mb-4">
@@ -623,7 +626,7 @@
               <h6 class="fw-bold mb-0 text-dark">📜 Branch Sales Ledger</h6>
               <button class="btn btn-outline-danger btn-sm py-0 rounded-pill" style="font-size: 0.7rem;" onclick="openClearLogModal()">Clear Log</button>
             </div>
-            <div class="table-responsive" style="max-height: 420px;">
+            <div class="table-responsive" style="max-height: 320px;">
               <table class="table table-sm table-hover align-middle" id="historyTable">
                 <thead>
                   <tr>
@@ -641,9 +644,26 @@
       </div>
     </div>
 
-    <!-- ================= 3. SECURE AUTH & REPRINT MODALS ================= -->
+    <!-- ================= 3. SECURE AUTH, DETAILS & REPRINT MODALS ================= -->
 
-    <!-- Edit/Reprint Verification Modal -->
+    <!-- CUSTOMER DETAILS VIEW MODAL (NO PRINT, VIEW ONLY) -->
+    <div class="modal fade no-print" id="customerDetailsModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-4 border-0 shadow">
+          <div class="modal-header bg-info text-dark p-3">
+            <h5 class="modal-title fw-bold">📄 Customer Invoice Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4" id="customerDetailsBody">
+            <!-- Dynamically populated invoice details -->
+          </div>
+          <div class="modal-footer bg-light py-2">
+            <button type="button" class="btn btn-secondary btn-sm fw-bold rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade no-print" id="editAuthModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -661,7 +681,6 @@
       </div>
     </div>
 
-    <!-- Clear Log Verification Modal -->
     <div class="modal fade no-print" id="clearLogAuthModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -679,7 +698,6 @@
       </div>
     </div>
 
-    <!-- SuperAdmin Clear All History Verification Modal -->
     <div class="modal fade no-print" id="superAdminClearAuthModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -697,7 +715,6 @@
       </div>
     </div>
 
-    <!-- Reprint Log Modal -->
     <div class="modal fade no-print" id="reprintLogModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -727,79 +744,77 @@
       </div>
     </div>
 
-    <!-- ================= 4. A4 DUAL-COPY PRINTABLE RECEIPTS ================= -->
+    <!-- ================= 4. 3*4 INCH PRINTABLE RECEIPT (CUSTOMER COPY ONLY - SEPARATE LINE FOR INVOICE NUMBER) ================= -->
 
-    <!-- Customer Copy -->
     <div class="print-copy-container">
       <div class="receipt-box">
         <div>
-          <!-- Header Top Row (Logo, Company, Copy Badge, Title, QR) -->
-          <div class="d-flex justify-content-between align-items-start border-bottom pb-2 mb-3">
-            <div class="d-flex align-items-center gap-3">
+          <!-- Header Top Row (Logo, Company, Copy Badge) -->
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-1">
+            <div class="d-flex align-items-center gap-2">
               <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=PB';">
               <div>
-                <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="d-flex align-items-center gap-1 mb-0">
                   <div class="d-flex flex-column">
-                    <div class="fw-extrabold text-dark fs-3 lh-1" style="letter-spacing: 0.5px;">PATHAN</div>
-                    <div class="fw-extrabold text-dark fs-4 lh-1" style="letter-spacing: 0.5px;">BAZAR</div>
+                    <div class="fw-extrabold text-dark fs-6 lh-1" style="letter-spacing: 0.5px;">PATHAN BAZAR</div>
                   </div>
-                  <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
+                  <span class="reprint-tag-display d-none reprint-stamp">REPRINTED</span>
                 </div>
-                <p class="mb-0 small text-muted print-branch-address" style="font-size: 0.72rem;">Branch Address</p>
-                <p class="mb-0 small text-muted" style="font-size: 0.72rem;"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
+                <p class="mb-0 text-muted print-branch-address" style="font-size: 4.8pt; line-height: 1;">Branch Address</p>
+                <p class="mb-0 text-muted" style="font-size: 4.8pt; line-height: 1;"><strong>Ph:</strong> <span class="print-branch-contact">-</span></p>
               </div>
             </div>
 
             <div class="text-end">
-              <span class="badge-copy-pill mb-1" id="printBranchBadge1">ONLINE ORDER (DHAKA MAIN BRANCH) - CUSTOMER COPY</span>
-              <h5 class="fw-bold text-uppercase mb-1 mt-1" style="letter-spacing: 0.5px;">MONEY RECEIPT</h5>
-              <div class="d-flex justify-content-end">
-                <div class="qr-container" id="qrCustomer"></div>
-              </div>
+              <span class="badge-copy-pill" id="printBranchBadge1">ONLINE-OC</span>
             </div>
           </div>
 
-          <!-- Customer & Invoice Info Box -->
-          <div class="row mb-3 small bg-light p-2 rounded border mx-0">
-            <div class="col-6 ps-1">
-              <p class="mb-1"><strong>Customer Name:</strong> <span class="print-client-name">-</span></p>
-              <p class="mb-1"><strong>Contact Number:</strong> <span class="print-client-phone">-</span></p>
-              <p class="mb-0"><strong>Address:</strong> <span class="print-client-address">-</span></p>
+          <!-- Customer Details Box -->
+          <div class="row mb-1 p-1 rounded border mx-0 bg-light" style="font-size: 6.2pt;">
+            <div class="col-7 ps-1">
+              <p class="mb-0"><strong>Cust:</strong> <span class="print-client-name fw-bold">-</span></p>
+              <p class="mb-0"><strong>Phone:</strong> <span class="print-client-phone fw-bold">-</span></p>
+              <p class="mb-0"><strong>Addr:</strong> <span class="print-client-address fw-bold">-</span></p>
             </div>
-            <div class="col-6 text-end pe-1">
-              <p class="mb-1"><strong>Receipt No:</strong> <span class="print-inv-num">-</span></p>
-              <p class="mb-1 print-sl-num-block d-none"><strong>SL Number:</strong> <span class="print-sl-num">-</span></p>
-              <p class="mb-1"><strong>Date:</strong> <span class="print-date">-</span></p>
-              <p class="mb-0"><strong>Salesman:</strong> <span class="print-salesman">-</span></p>
+            <div class="col-5 text-end pe-1">
+              <p class="mb-0"><strong>Date:</strong> <span class="print-date">-</span></p>
+              <p class="mb-0"><strong>Sales:</strong> <span class="print-salesman">-</span></p>
             </div>
+          </div>
+
+          <!-- Separate Dedicated Line Below Customer Details for Invoice Number & SL Number -->
+          <div class="px-2 py-1 mb-1 rounded bg-white border d-flex justify-content-between align-items-center" style="font-size: 6.2pt;">
+            <div><strong>Inv:</strong> <span class="print-inv-num fw-bold text-dark">-</span></div>
+            <div class="print-sl-num-block d-none"><strong>SL:</strong> <span class="print-sl-num fw-bold text-danger">-</span></div>
           </div>
 
           <!-- Printable Online Note Block -->
-          <div class="p-2 mb-2 rounded bg-light border d-none print-note-block small">
-            <strong>Order Note:</strong> <span class="print-note-text">-</span>
+          <div class="p-1 mb-1 rounded bg-light border d-none print-note-block" style="font-size: 5.8pt;">
+            <strong>Note:</strong> <span class="print-note-text">-</span>
           </div>
 
-          <table class="table table-bordered align-middle table-print mb-2">
+          <table class="table table-bordered align-middle table-print mb-1">
             <thead>
               <tr class="table-secondary">
                 <th>Item Description</th>
-                <th width="100" class="text-end">Price (৳)</th>
-                <th width="70" class="text-center">Qty</th>
-                <th width="120" class="text-end">Total (৳)</th>
+                <th width="48" class="text-end">Price</th>
+                <th width="28" class="text-center">Qty</th>
+                <th width="48" class="text-end">Total</th>
               </tr>
             </thead>
-            <tbody class="print-item-list"></tbody>
+            <tbody class="print-item-list" style="font-size: 6pt;"></tbody>
           </table>
 
-          <div class="row justify-content-end mt-2">
-            <div class="col-5">
-              <table class="table table-sm table-borderless mb-0">
+          <div class="row justify-content-end mt-1">
+            <div class="col-6">
+              <table class="table table-sm table-borderless mb-0" style="font-size: 6.2pt;">
                 <tr>
                   <td>Subtotal:</td>
                   <td class="text-end fw-bold print-subtotal">৳0.00</td>
                 </tr>
                 <tr class="print-shipping-row d-none">
-                  <td>Shipping Charge:</td>
+                  <td>Shipping:</td>
                   <td class="text-end fw-bold print-shipping">৳0.00</td>
                 </tr>
                 <tr>
@@ -807,123 +822,14 @@
                   <td class="text-end fw-bold print-discount">৳0.00</td>
                 </tr>
                 <tr class="border-top">
-                  <td class="fw-bold">Grand Total:</td>
-                  <td class="text-end fw-bold fs-6 print-grandtotal">৳0.00</td>
+                  <td class="fw-bold">G. TOTAL:</td>
+                  <td class="text-end fw-bold print-grandtotal text-success fw-extrabold" style="font-size: 7.2pt;">৳0.00</td>
                 </tr>
               </table>
             </div>
           </div>
         </div>
 
-        <div class="row text-center mt-3 pt-2">
-          <div class="col-6">
-            <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Customer Signature</p>
-          </div>
-          <div class="col-6">
-            <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Authorized Signatory</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Office Copy -->
-    <div class="print-copy-container">
-      <div class="receipt-box">
-        <div>
-          <!-- Header Top Row (Logo, Company, Copy Badge, Title, QR) -->
-          <div class="d-flex justify-content-between align-items-start border-bottom pb-2 mb-3">
-            <div class="d-flex align-items-center gap-3">
-              <img src="pb.png" alt="Logo" class="print-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=PB';">
-              <div>
-                <div class="d-flex align-items-center gap-2 mb-1">
-                  <div class="d-flex flex-column">
-                    <div class="fw-extrabold text-dark fs-3 lh-1" style="letter-spacing: 0.5px;">PATHAN</div>
-                    <div class="fw-extrabold text-dark fs-4 lh-1" style="letter-spacing: 0.5px;">BAZAR</div>
-                  </div>
-                  <span class="reprint-tag-display d-none reprint-stamp">REPRINTED / EDITED</span>
-                </div>
-                <p class="mb-0 small text-muted print-branch-address" style="font-size: 0.72rem;">Branch Address</p>
-                <p class="mb-0 small text-muted" style="font-size: 0.72rem;"><strong>Contact:</strong> <span class="print-branch-contact">-</span></p>
-              </div>
-            </div>
-
-            <div class="text-end">
-              <span class="badge-copy-pill mb-1" id="printBranchBadge2">ONLINE ORDER (DHAKA MAIN BRANCH) - OFFICE COPY</span>
-              <h5 class="fw-bold text-uppercase mb-1 mt-1" style="letter-spacing: 0.5px;">MONEY RECEIPT</h5>
-              <div class="d-flex justify-content-end">
-                <div class="qr-container" id="qrOffice"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Customer & Invoice Info Box -->
-          <div class="row mb-3 small bg-light p-2 rounded border mx-0">
-            <div class="col-6 ps-1">
-              <p class="mb-1"><strong>Customer Name:</strong> <span class="print-client-name">-</span></p>
-              <p class="mb-1"><strong>Contact Number:</strong> <span class="print-client-phone">-</span></p>
-              <p class="mb-0"><strong>Address:</strong> <span class="print-client-address">-</span></p>
-            </div>
-            <div class="col-6 text-end pe-1">
-              <p class="mb-1"><strong>Receipt No:</strong> <span class="print-inv-num">-</span></p>
-              <p class="mb-1 print-sl-num-block d-none"><strong>SL Number:</strong> <span class="print-sl-num">-</span></p>
-              <p class="mb-1"><strong>Date:</strong> <span class="print-date">-</span></p>
-              <p class="mb-0"><strong>Salesman:</strong> <span class="print-salesman">-</span></p>
-            </div>
-          </div>
-
-          <!-- Printable Online Note Block -->
-          <div class="p-2 mb-2 rounded bg-light border d-none print-note-block small">
-            <strong>Order Note:</strong> <span class="print-note-text">-</span>
-          </div>
-
-          <table class="table table-bordered align-middle table-print mb-2">
-            <thead>
-              <tr class="table-secondary">
-                <th>Item Description</th>
-                <th width="100" class="text-end">Price (৳)</th>
-                <th width="70" class="text-center">Qty</th>
-                <th width="120" class="text-end">Total (৳)</th>
-              </tr>
-            </thead>
-            <tbody class="print-item-list"></tbody>
-          </table>
-
-          <div class="row justify-content-end mt-2">
-            <div class="col-5">
-              <table class="table table-sm table-borderless mb-0">
-                <tr>
-                  <td>Subtotal:</td>
-                  <td class="text-end fw-bold print-subtotal">৳0.00</td>
-                </tr>
-                <tr class="print-shipping-row d-none">
-                  <td>Shipping Charge:</td>
-                  <td class="text-end fw-bold print-shipping">৳0.00</td>
-                </tr>
-                <tr>
-                  <td>Discount:</td>
-                  <td class="text-end fw-bold print-discount">৳0.00</td>
-                </tr>
-                <tr class="border-top">
-                  <td class="fw-bold">Grand Total:</td>
-                  <td class="text-end fw-bold fs-6 print-grandtotal">৳0.00</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="row text-center mt-3 pt-2">
-          <div class="col-6">
-            <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Customer Signature</p>
-          </div>
-          <div class="col-6">
-            <p class="mb-0">___________________________</p>
-            <p class="fw-bold small text-muted">Authorized Signatory</p>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -938,10 +844,10 @@
 
     // CENTRAL CATALOG
     const PRODUCT_CATALOG = [
-      { name: "Product 1 - Men's Shirt", price: 650 },
-      { name: "Product 2 - Denim Jeans Pant", price: 1200 },
-      { name: "Product 3 - Premium T-Shirt", price: 350 },
-      { name: "Product 4 - Casual Polo Shirt", price: 450 },
+      { name: "N/A", price: 0 },
+      { name: "Three Pices", price: 0 },
+      { name: "Sharee", price: 0 },
+      { name: "Lehenga", price: 0 },
       { name: "Product 5 - Formal Trousers", price: 950 },
       { name: "Product 6 - Ladies Kurti", price: 850 },
       { name: "Product 7 - Three Piece Set", price: 2200 },
@@ -952,13 +858,13 @@
       { name: "Product 12 - Hooded Sweatshirt", price: 1100 },
       { name: "Product 13 - Formal Blazer", price: 4200 },
       { name: "Product 14 - Silk Dupatta", price: 400 },
-      { name: "Product 15 - Cotton Vest", price: 300 }
+      { name: "Manual Add - Long List", price: 0 }
     ];
 
     // SUPERADMIN CREDENTIALS
     const SUPER_ADMIN = { user: "admin", pass: "admin123" };
 
-    // REGISTERED BRANCH & USER ACCOUNTS (Updated Dhaka Address & Phones)
+    // REGISTERED BRANCH & USER ACCOUNTS
     const BRANCH_USERS = {
       "pbonline": {
         pass: "ON112233",
@@ -987,6 +893,13 @@
         address: "70, hazi mantion road, Terribazar, Chattogram", 
         phone: "01333723463",
         isOnlineUser: false 
+      },
+      "pbuttara": {
+        pass: "uttara189",
+        name: "Uttara Branch",
+        address: "31-32, 2nd Floor, Amir Complex, Azampur, Uttara",
+        phone: "01837510189, 01333723463",
+        isOnlineUser: false
       }
     };
 
@@ -1004,7 +917,6 @@
       const u = document.getElementById("loginUser").value.trim().toLowerCase();
       const p = document.getElementById("loginPass").value.trim();
 
-      // SuperAdmin Check
       if (u === SUPER_ADMIN.user && p === SUPER_ADMIN.pass) {
         isSuperAdmin = true;
         document.getElementById("loginSection").classList.add("d-none");
@@ -1024,15 +936,12 @@
         document.getElementById("currentBranchBadge").textContent = activeBranchObj.name;
         document.getElementById("currentBranchAddress").textContent = `${activeBranchObj.address} | ${activeBranchObj.phone}`;
         
-        document.getElementById("printBranchBadge1").textContent = `${activeBranchObj.name.toUpperCase()} - CUSTOMER COPY`;
-        document.getElementById("printBranchBadge2").textContent = `${activeBranchObj.name.toUpperCase()} - OFFICE COPY`;
+        document.getElementById("printBranchBadge1").textContent = `ONLINE - CUSTOMER COPY`;
         
         document.querySelectorAll(".print-branch-address").forEach(e => e.textContent = activeBranchObj.address);
         document.querySelectorAll(".print-branch-contact").forEach(e => e.textContent = activeBranchObj.phone);
 
-        // Toggle Online Specific Elements
         configureOnlineUserUI();
-
         initApp();
       } else {
         alert("Invalid Username or Password!");
@@ -1126,7 +1035,6 @@
         const modal = bootstrap.Modal.getInstance(modalEl);
         modal.hide();
 
-        // Clear all branch history keys
         Object.keys(BRANCH_USERS).forEach(u => {
           const bName = BRANCH_USERS[u].name;
           const historyKey = `pb_history_${bName.replace(/\s+/g, '').toLowerCase()}`;
@@ -1343,7 +1251,6 @@
       document.querySelectorAll(".print-discount").forEach(e => e.textContent = `৳${discountAmount.toFixed(2)}`);
       document.querySelectorAll(".print-grandtotal").forEach(e => e.textContent = `৳${grandTotal.toFixed(2)}`);
 
-      // Online Dynamic Print Updates
       document.querySelectorAll(".print-sl-num-block").forEach(e => {
         if (isOnline) {
           e.classList.remove("d-none");
@@ -1371,7 +1278,6 @@
         }
       });
 
-      // Properly populating ALL print item containers across receipt copies
       document.querySelectorAll(".print-item-list").forEach(tbody => {
         tbody.innerHTML = "";
         if (currentItems.length === 0) {
@@ -1390,7 +1296,6 @@
         }
       });
 
-      // Show/Hide Reprint Stamps on Print View
       document.querySelectorAll(".reprint-tag-display").forEach(e => {
         if (isEditingMode) {
           e.classList.remove("d-none");
@@ -1398,30 +1303,158 @@
           e.classList.add("d-none");
         }
       });
-
-      // Regenerate QR Codes for Invoice
-      generateQRCodes(invNum);
     }
 
-    function generateQRCodes(invNum) {
-      document.getElementById("qrCustomer").innerHTML = "";
-      document.getElementById("qrOffice").innerHTML = "";
+    // CUSTOMER PHONE OR INVOICE NUMBER SEARCH FEATURE & VIEW DETAILS MODAL
+    function handleCustomerSearch() {
+      const query = document.getElementById("customerSearchInput").value.trim().toLowerCase();
+      const container = document.getElementById("customerSearchResultContainer");
       
-      if (invNum) {
-        new QRCode(document.getElementById("qrCustomer"), {
-          text: invNum,
-          width: 65,
-          height: 65
-        });
-        new QRCode(document.getElementById("qrOffice"), {
-          text: invNum,
-          width: 65,
-          height: 65
-        });
+      if (!query) {
+        container.classList.add("d-none");
+        container.innerHTML = "";
+        return;
       }
+
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      
+      const matches = history.filter(item => 
+        (item.phone && item.phone.toLowerCase().includes(query)) || 
+        (item.client && item.client.toLowerCase().includes(query)) ||
+        (item.invNum && item.invNum.toLowerCase().includes(query))
+      );
+
+      container.classList.remove("d-none");
+      container.innerHTML = "";
+
+      if (matches.length === 0) {
+        container.innerHTML = `<div class="small text-muted text-center py-2">No matching record found.</div>`;
+        return;
+      }
+
+      matches.forEach(item => {
+        container.innerHTML += `
+          <div class="p-2 mb-2 bg-white border rounded shadow-sm d-flex flex-column gap-1" style="font-size: 0.78rem;">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>${item.client}</strong> <span class="text-muted">(${item.phone})</span><br>
+                <span class="text-muted font-monospace" style="font-size:0.7rem;">Inv: ${item.invNum}</span><br>
+                <span class="text-muted" style="font-size:0.7rem;">Date: ${item.date} | Total: <strong class="text-success">৳${item.grandTotal}</strong></span>
+              </div>
+            </div>
+            <div class="d-flex gap-1 justify-content-end mt-1">
+              <button class="btn btn-outline-info btn-sm py-0 px-2 fw-bold" style="font-size: 0.68rem;" onclick="viewCustomerInvoiceDetails('${item.invNum}')">👁️ View Details</button>
+              <button class="btn btn-outline-primary btn-sm py-0 px-2 fw-bold" style="font-size: 0.68rem;" onclick="requestEditInvoice('${item.invNum}')">✏️ Edit / Reprint</button>
+            </div>
+          </div>
+        `;
+      });
     }
 
-    // PRINT & LOG SALE (LOCAL + FREE GOOGLE APPS SCRIPT)
+    function viewCustomerInvoiceDetails(invNum) {
+      const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
+      const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      const target = history.find(item => item.invNum === invNum);
+
+      if (!target) {
+        alert("Invoice not found.");
+        return;
+      }
+
+      const isOnline = activeBranchObj && activeBranchObj.isOnlineUser;
+      let itemsHtml = "";
+      if (target.items && target.items.length > 0) {
+        target.items.forEach((it, idx) => {
+          itemsHtml += `
+            <tr>
+              <td>${idx + 1}. ${it.name}</td>
+              <td class="text-end">৳${parseFloat(it.price).toFixed(2)}</td>
+              <td class="text-center">${it.qty}</td>
+              <td class="text-end fw-bold">৳${(it.price * it.qty).toFixed(2)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        itemsHtml = `<tr><td colspan="4" class="text-center text-muted">No items recorded</td></tr>`;
+      }
+
+      const subtotal = target.items ? target.items.reduce((sum, i) => sum + (i.price * i.qty), 0) : 0;
+      const discountVal = parseFloat(target.discVal) || 0;
+      const discountAmount = target.discType === 'percent' ? (subtotal * discountVal) / 100 : discountVal;
+      const shippingVal = parseFloat(target.shippingCharge) || 0;
+
+      const detailsBody = document.getElementById("customerDetailsBody");
+      detailsBody.innerHTML = `
+        <div class="p-3 bg-light rounded border mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold text-primary mb-0">Pathan Bazar - Invoice View</h6>
+            <span class="badge bg-dark">${target.branch || activeBranchObj.name}</span>
+          </div>
+          <hr class="my-2">
+          <div class="row g-2" style="font-size: 0.85rem;">
+            <div class="col-7">
+              <p class="mb-1"><strong>Customer:</strong> ${target.client || 'N/A'}</p>
+              <p class="mb-1"><strong>Phone:</strong> ${target.phone || 'N/A'}</p>
+              <p class="mb-1"><strong>Address:</strong> ${target.address || 'N/A'}</p>
+            </div>
+            <div class="col-5 text-end">
+              <p class="mb-1"><strong>Invoice:</strong> <code class="text-dark fw-bold">${target.invNum}</code></p>
+              ${target.slNum ? `<p class="mb-1"><strong>SL No:</strong> ${target.slNum}</p>` : ''}
+              <p class="mb-1"><strong>Date:</strong> ${target.date}</p>
+              <p class="mb-1"><strong>Salesman:</strong> ${target.salesman || 'N/A'}</p>
+            </div>
+          </div>
+          ${target.note ? `<div class="mt-2 p-2 bg-white rounded border small"><strong>Note:</strong> ${target.note}</div>` : ''}
+        </div>
+
+        <h6 class="fw-bold mb-2 text-dark" style="font-size: 0.85rem;">Purchased Items:</h6>
+        <div class="table-responsive mb-3">
+          <table class="table table-sm table-bordered align-middle" style="font-size: 0.8rem;">
+            <thead class="table-secondary">
+              <tr>
+                <th>Item Description</th>
+                <th class="text-end" width="80">Price</th>
+                <th class="text-center" width="50">Qty</th>
+                <th class="text-end" width="80">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="row justify-content-end">
+          <div class="col-7">
+            <div class="p-2 bg-light rounded border" style="font-size: 0.82rem;">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Subtotal:</span>
+                <span class="fw-bold">৳${subtotal.toFixed(2)}</span>
+              </div>
+              ${shippingVal > 0 ? `
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Shipping:</span>
+                <span class="fw-bold">৳${shippingVal.toFixed(2)}</span>
+              </div>` : ''}
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">Discount:</span>
+                <span class="fw-bold">৳${discountAmount.toFixed(2)}</span>
+              </div>
+              <hr class="my-1">
+              <div class="d-flex justify-content-between">
+                <span class="fw-bold text-dark">Grand Total:</span>
+                <span class="fw-extrabold text-success fs-6">৳${target.grandTotal}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const modal = new bootstrap.Modal(document.getElementById('customerDetailsModal'));
+      modal.show();
+    }
+
     function printAndLogInvoice() {
       if (currentItems.length === 0) {
         alert("Please add at least one item before printing!");
@@ -1449,7 +1482,6 @@
 
       const itemsSummary = currentItems.map(i => `${i.name} (x${i.qty})`).join(", ");
 
-      // 1. SAVE DIRECTLY TO GOOGLE SHEET VIA FREE APPS SCRIPT
       fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
@@ -1477,7 +1509,6 @@
       .then(() => console.log("Logged online directly to Google Sheet successfully!"))
       .catch(err => console.error("Error logging online:", err));
 
-      // 2. LOCAL STORAGE LOGIC
       const historyKey = `pb_history_${activeBranchObj.name.replace(/\s+/g, '').toLowerCase()}`;
       let history = JSON.parse(localStorage.getItem(historyKey) || "[]");
       const timestamp = new Date().toLocaleString();
